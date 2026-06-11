@@ -5,24 +5,10 @@ import gsap from "gsap";
 
 const blogs = [
   {
-    title: "Blockchain Basics",
-    date: "12 OCT 2026",
-    category: "ENGINEERING",
-  },
-  {
-    title: "MINIMALISM IN UI DESIGN",
-    date: "28 SEP 2026",
-    category: "DESIGN",
-  },
-  {
-    title: "HOW I BUILT THIS PORTFOLIO",
-    date: "14 AUG 2026",
-    category: "TUTORIAL",
-  },
-  {
-    title: "MY JOURNEY IN WEB DEV",
-    date: "02 JUL 2026",
-    category: "PERSONAL",
+    title: "Blockchain 101",
+    date: "2 JUNE 2025",
+    category: "WEB3",
+    link: "https://medium.com/@dhrut.24.swain/understanding-blockchain-technology-a-beginners-guide-to-the-foundation-of-web3-bc03851d22a4"
   }
 ];
 
@@ -71,14 +57,20 @@ export default function Blogs() {
       {/* Blog List */}
       <div className="flex flex-col border-t border-black blog-list">
         {blogs.map((blog, idx) => (
-          <div key={idx} className="blog-row group border-b border-black flex flex-col md:flex-row md:items-center justify-between py-8 lg:py-12 cursor-pointer transition-colors duration-500 hover:bg-black hover:text-background px-4 -mx-4 lg:px-8 lg:-mx-8">
+          <a 
+            key={idx} 
+            href={blog.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="blog-row group border-b border-black flex flex-col md:flex-row md:items-center justify-between py-8 lg:py-12 cursor-pointer transition-colors duration-500 hover:bg-black hover:text-background px-4 -mx-4 lg:px-8 lg:-mx-8"
+          >
             
             <div className="flex items-center w-full md:w-3/4">
               <span className="font-faktum text-sm lg:text-base font-bold tracking-widest opacity-40 group-hover:opacity-100 transition-opacity w-12 lg:w-20 shrink-0">
                 0{idx + 1}
               </span>
 
-              <h2 className="font-faktum text-4xl sm:text-5xl lg:text-7xl xl:text-[7rem] tracking-wide leading-none transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+              <h2 className="font-faktum text-4xl sm:text-5xl lg:text-7xl xl:text-[7rem] leading-none transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
                 {blog.title}
               </h2>
             </div>
@@ -88,7 +80,7 @@ export default function Blogs() {
               <span className="opacity-50">{blog.date}</span>
             </div>
 
-          </div>
+          </a>
         ))}
       </div>
 

@@ -14,19 +14,19 @@ const careerData = [
   {
     role: "Backend Engineer",
     company: "N6T Tech",
-    date: "JAN 2023 - PRESENT",
+    date: "FEB 2026 - PRESENT",
     logo: "N6T",
   },
   {
     role: "Software Engineer",
     company: "Scogo AI",
-    date: "MAR 2022 - JAN 2023",
+    date: "AUG 2025 - NOV 2025",
     logo: "SCOGO",
   },
   {
-    role: "Full Stack Dev",
+    role: "Full Stack Intern",
     company: "GoUnplan",
-    date: "JUN 2021 - FEB 2022",
+    date: "MAY 2025 - AUG 2025",
     logo: "GOUNPLAN",
   },
 ];

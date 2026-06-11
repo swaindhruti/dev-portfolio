@@ -194,7 +194,7 @@ export default function Hero() {
                 <g style={{ transform: `rotate(${celestial.hstAngle}deg)`, transformOrigin: '500px 500px' }} className="transition-transform duration-1000 ease-linear">
                   <rect x="496" y="336" width="8" height="8" fill="currentColor" opacity="0.8" />
                   <g style={{ transform: `rotate(${-celestial.hstAngle}deg)`, transformOrigin: '500px 340px' }}>
-                    <text x="520" y="345" textAnchor="start" fontSize="14" className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 fill-current font-faktum font-bold tracking-[0.2em] uppercase opacity-80">HST</text>
+                    <text x="520" y="345" textAnchor="start" fontSize="14" className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 fill-current font-faktum font-bold tracking-[0.2em] uppercase">HST</text>
                   </g>
                 </g>
 

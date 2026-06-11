@@ -3,17 +3,18 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 
 export default function About() {
   const containerRef = useRef<HTMLElement>(null);
   
   const bioLines = [
-    "I'm a Mining Engineer turned Full Stack Developer based in",
-    "Odisha, India. I've gone from making drones to architecting",
-    "high-performance web applications and intelligent AI agents —",
-    "I care just as much about robust architecture as I do about",
-    "seamless user experience. I'm a total engineering freak:",
-    "full-stack by name, backend is my ultimate solution."
+    <>I'm a Mining Engineer and Software Engineer by passion</>,
+    <>from Odisha, India. I used to make aeronautics drones</>,
+    <>and robot stuff, and I'm a massive fan of Carl Sagan.</>,
+    <>I love to work with architecture and all things code.</>,
+    <>I'm a huge fan of movies and theaters, and I also</>,
+    <>enjoy making <Link href="https://youtube.com/" target="_blank" className="italic underline decoration-2 underline-offset-4 transition-colors duration-300">YouTube</Link> videos!</>
   ];
 
   useEffect(() => {
@@ -74,10 +75,10 @@ export default function About() {
 
       {/* Buttons */}
       <div className="flex flex-wrap gap-4 mt-12 lg:mt-20">
-        <button className="about-btn px-10 lg:px-12 py-5 lg:py-6 bg-black text-background rounded-full font-faktum text-xs lg:text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 transition-transform duration-300">
+        <button className="about-btn px-10 lg:px-12 py-5 lg:py-6 bg-black text-background rounded-full font-faktum text-xs lg:text-sm font-bold tracking-[0.2em] uppercase hover:scale-110 transition-transform duration-300">
           Projects
         </button>
-        <button className="about-btn px-10 lg:px-12 py-5 lg:py-6 bg-black/10 border-2 border-transparent hover:border-black text-foreground rounded-full font-faktum text-xs lg:text-sm font-bold tracking-[0.2em] uppercase transition-all duration-300">
+        <button className="about-btn px-10 lg:px-12 py-5 lg:py-6 bg-black/10 border-2 border-transparent hover:border-black hover:scale-110 text-foreground rounded-full font-faktum text-xs lg:text-sm font-bold tracking-[0.2em] uppercase transition-all duration-300">
           Experience
         </button>
       </div>

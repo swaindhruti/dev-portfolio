@@ -3,35 +3,57 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 const showsData = [
   {
-    title: "EVERYTHING EVERYWHERE ALL AT ONCE",
-    genre: "ADVENTURE",
-    tag: "FILM",
-    description: "The first time I watched this film, my jaw dropped to the floor. I'd never seen anything quite like it — yet it felt familiar. It's a multiverse, it's family, it's personal growth, it's action. It makes you laugh and cry. It's quite literally everything.",
-    color: "bg-black/10"
-  },
-  {
-    title: "THE DRAMA",
-    genre: "DRAMA",
-    tag: "FILM",
-    description: "Complex themes, impressively executed through the focused story of a wedding planning. What I love most about this film is the art of editing. With glimpses into flashback moments from the past, we understand where the character is coming from.",
-    color: "bg-black/10"
-  },
-  {
-    title: "PLURIBUS",
+    title: "SUITS",
     genre: "DRAMA",
     tag: "TV SERIES",
-    description: "Speechlessly bizarre. Intriguing. Must watch.",
-    color: "bg-black/10"
+    color: "bg-black/10",
+    imageId: "https://res.cloudinary.com/ddtutqyub/image/upload/q_auto/f_auto/v1781144669/suits_avkfxl.jpg"
   },
   {
-    title: "THE STUDIO",
+    title: "House M.D",
+    genre: "DRAMA",
+    tag: "TV SERIES",
+    color: "bg-black/10",
+    imageId: "https://res.cloudinary.com/ddtutqyub/image/upload/q_auto/f_auto/v1781144171/housemd_s5wquf.jpg"
+  },
+  {
+    title: "LOKI",
+    genre: "SCI-FI",
+    tag: "TV SERIES",
+    color: "bg-black/10",
+    imageId: "https://res.cloudinary.com/ddtutqyub/image/upload/q_auto/f_auto/v1781144099/loki_tgrzcc.jpg"
+  },
+  {
+    title: "Panchayat",
     genre: "COMEDY",
     tag: "TV SERIES",
-    description: "Not only does this show give us a fascinating peek behind the scenes of moviemaking, but it's also beautifully shot, brilliantly edited, and utterly entertaining. I'm not even a comedy-show fan, yet I can't stop watching.",
-    color: "bg-black/10"
+    color: "bg-black/10",
+    imageId: "https://res.cloudinary.com/ddtutqyub/image/upload/q_auto/f_auto/v1781144743/panchayat_mh1e04.jpg"
+  },
+  {
+    title: "Nuremberg",
+    genre: "HISTORY",
+    tag: "Movie",
+    color: "bg-black/10",
+    imageId: "https://res.cloudinary.com/ddtutqyub/image/upload/q_auto/f_auto/v1781144243/nuremberg_kldwsj.jpg"
+  },
+  {
+    title: "Shutter Island",
+    genre: "MYSTERY",
+    tag: "Movie",
+    color: "bg-black/10",
+    imageId: "https://res.cloudinary.com/ddtutqyub/image/upload/f_auto,q_auto/shutterislandd_fyxyjo"
+  },
+  {
+    title: "Spider-Man: Noir",
+    genre: "SCI-FI",
+    tag: "TV Series",
+    color: "bg-black/10",
+    imageId: "https://res.cloudinary.com/ddtutqyub/image/upload/f_auto,q_auto/Spider_Noir_poster_ns6fvn"
   }
 ];
 
@@ -39,6 +61,19 @@ const titleChars = "I love shows".split("");
 
 export default function Shows() {
   const containerRef = useRef<HTMLElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: -window.innerWidth / 3, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: window.innerWidth / 3, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -84,8 +119,8 @@ export default function Shows() {
   return (
     <section ref={containerRef} className="relative w-full min-h-screen px-6 lg:px-24 py-32 bg-background text-foreground z-10 overflow-hidden">
       
-      {/* Title */}
-      <div className="mb-16 pl-2">
+      {/* Title & Navigation */}
+      <div className="mb-16 pl-2 flex justify-between items-end">
         <h2 className="font-display text-[15vw] lg:text-[8vw] leading-[0.8] tracking-wideer flex items-end">
           <span className="flex overflow-hidden">
             {titleChars.map((char, index) => (
@@ -97,15 +132,57 @@ export default function Shows() {
             ))}
           </span>
         </h2>
+        
+        {/* Navigation Buttons */}
+        <div className="flex gap-4 pb-2 lg:pb-4 pr-6 lg:pr-0">
+          <button 
+            onClick={scrollLeft}
+            className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-black flex items-center justify-center hover:scale-105 transition-transform group"
+            aria-label="Previous"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform w-6 h-6 lg:w-8 lg:h-8">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <button 
+            onClick={scrollRight}
+            className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-black flex items-center justify-center hover:scale-105 transition-transform group"
+            aria-label="Next"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform w-6 h-6 lg:w-8 lg:h-8">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+      {/* Carousel */}
+      <div 
+        ref={carouselRef}
+        className="flex gap-6 lg:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth shows-scroll-container pr-6 lg:pr-24"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        <style>{`
+          .shows-scroll-container::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
         {showsData.map((show, index) => (
-          <div key={index} className="show-card flex flex-col font-faktum">
+          <div key={index} className="show-card flex-none w-[80vw] md:w-[40vw] lg:w-[22vw] flex flex-col font-faktum snap-start">
             {/* Image Placeholder */}
-            <div className={`w-full aspect-3/4 ${show.color} rounded-2xl mb-4 relative overflow-hidden flex items-center justify-center`}>
-              <span className="text-black/30 font-bold tracking-[0.3em] text-sm uppercase">POSTER</span>
+            <div className={`group w-full aspect-3/4 ${show.color} rounded-2xl mb-4 relative overflow-hidden flex items-center justify-center`}>
+              {show.imageId ? (
+                <Image
+                  width={960}
+                  height={1280}
+                  src={show.imageId}
+                  sizes="100vw"
+                  alt={`${show.title} poster`}
+                  className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                />
+              ) : (
+                <span className="text-black/30 font-bold tracking-[0.3em] text-sm uppercase">POSTER</span>
+              )}
             </div>
             
             {/* Header Info */}
