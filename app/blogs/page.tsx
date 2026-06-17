@@ -62,7 +62,7 @@ export default function Blogs() {
             href={blog.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="blog-row group border-b border-black flex flex-col md:flex-row md:items-center justify-between py-8 lg:py-12 cursor-pointer transition-colors duration-500 hover:bg-black hover:text-background px-4 -mx-4 lg:px-8 lg:-mx-8"
+            className="blog-row group border-b border-black flex flex-col md:flex-row md:items-center justify-between py-8 lg:py-12 cursor-pointer transition-colors duration-500 hover:bg-black hover:text-background px-4 lg:px-6"
           >
             
             <div className="flex items-center w-full md:w-3/4">
@@ -70,7 +70,7 @@ export default function Blogs() {
                 0{idx + 1}
               </span>
 
-              <h2 className="font-faktum text-4xl sm:text-5xl lg:text-7xl xl:text-[7rem] leading-none transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+              <h2 className="font-faktum text-4xl sm:text-5xl lg:text-7xl xl:text-[7rem] leading-none transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] tracking-tight">
                 {blog.title}
               </h2>
             </div>

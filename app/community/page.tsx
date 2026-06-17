@@ -5,22 +5,17 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const communities = [
-  "GOOGLE DEV GROUPS", "WEB3 ODISHA", "OPEN SOURCE INDIA", 
-  "REACT BHUBANESWAR", "NEXTJS CONF", "DEV REL COMMUNITY",
-  "UI/UX ODISHA", "FIGMA COMMUNITY", "RUST ODISHA", 
-  "KUBERNETES INDIA", "CLOUD NATIVE DEV", "INDIE HACKERS",
-  "PRODUCT HUNT", "HASHNODE DEV"
+  "OPENCODE NIT ROURKELA", "GOOGLE DEVELOPER GROUPS", "AWS CLOUD CLUBS", "HACKNITR"
 ];
 
 const events = [
-  { title: "DEVFEST 2025", date: "NOV 2025", location: "BHUBANESWAR" },
-  { title: "HACKODISHA V3", date: "SEP 2025", location: "NIT ROURKELA" },
-  { title: "TECH MEETUP", date: "JUL 2025", location: "KIIT" },
-  { title: "WEB3 CONFERENCE", date: "MAY 2025", location: "BANGALORE" },
-  { title: "OPEN SOURCE SUMMIT", date: "APR 2025", location: "DELHI" },
-  { title: "REACT INDIA", date: "FEB 2025", location: "GOA" },
-  { title: "DESIGN SYSTEM MEET", date: "JAN 2025", location: "MUMBAI" },
-  { title: "AWS COMMUNITY DAY", date: "DEC 2024", location: "KOLKATA" },
+  { title: "HACKNITR 7.0", date: "2026", location: "PAN INDIA" },
+  { title: "HACKNITR 6.0", date: "2025", location: "PAN INDIA" },
+  { title: 'HACKINNOVISION', date: "2025", location: "NIT ROURKELA" },
+  { title: "BLOCK TALKS: DIVE INTO WEB3", date: "2025", location: "ONLINE" },
+  { title: "HACK4BENGAL", date: "2025", location: "KOLKATA" },
+  { title: "HACKNITR 5.0", date: "2024", location: "PAN INDIA" },
+  { title: "HACKTOBER FEST", date: "2023", location: "GLOBAL" },
 ];
 
 export default function Community() {
@@ -113,14 +108,14 @@ export default function Community() {
 
       {/* Events Dense Grid */}
       <div className="events-container">
-        <div className="border-b border-black pb-4 mb-8 flex justify-between items-end">
+        <div className="border-b border-black pb-4  flex justify-between items-end">
           <h2 className="font-faktum text-sm lg:text-base font-bold tracking-[0.3em] uppercase opacity-60">Past Engagements</h2>
           <span className="font-faktum text-[10px] font-bold tracking-widest opacity-40">{events.length} ARCHIVED</span>
         </div>
 
-        <div className="flex flex-col border-t-[3px] border-black">
+        <div className="flex flex-col">
           {events.map((event, idx) => (
-            <div key={idx} className="event-card group grid grid-cols-1 md:grid-cols-12 gap-4 py-8 lg:py-10 border-b border-black/20 hover:bg-black hover:text-background transition-colors duration-500 px-4 -mx-4 lg:px-8 lg:-mx-8 cursor-pointer items-center">
+            <div key={idx} className="event-card group grid grid-cols-1 md:grid-cols-12 gap-4 py-8 lg:py-10 border-b border-black/20 hover:bg-black hover:text-background transition-colors duration-500 px-4 lg:px-6 cursor-pointer items-center">
               
               {/* Date Column */}
               <div className="md:col-span-3 lg:col-span-2">
