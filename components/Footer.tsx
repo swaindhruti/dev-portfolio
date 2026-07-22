@@ -53,6 +53,8 @@ export default function Footer() {
   ];
 
   const socials = [
+    { label: "GitHub", href: "https://github.com/swaindhruti" },
+    { label: "Substack", href: "https://dhrutiswain.substack.com/" },
     { label: "Twitter", href: "https://twitter.com/D_SwainX" },
     { label: "LinkedIn", href: "https://linkedin.com/in/dhrutinandan" },
     { label: "YouTube", href: "https://youtube.com/@dhrutinandan" },

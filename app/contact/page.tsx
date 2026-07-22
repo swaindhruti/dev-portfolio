@@ -62,6 +62,7 @@ export default function Contact() {
           <div className="contact-detail flex gap-16">
             <div className="flex flex-col gap-3">
               <h2 className="font-faktum text-[10px] lg:text-xs font-bold tracking-[0.3em] uppercase opacity-50 mb-1 border-b border-black/20 pb-2 inline-block">Social</h2>
+              <a href="https://github.com/swaindhruti" target="_blank" rel="noreferrer" className="font-faktum text-sm lg:text-base font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">GitHub</a>
               <a href="https://twitter.com/D_SwainX" target="_blank" rel="noreferrer" className="font-faktum text-sm lg:text-base font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">Twitter</a>
               <a href="https://linkedin.com/in/dhrutinandan" target="_blank" rel="noreferrer" className="font-faktum text-sm lg:text-base font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">LinkedIn</a>
               <a href="https://youtube.com/@dhrutinandan" target="_blank" rel="noreferrer" className="font-faktum text-sm lg:text-base font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">YouTube</a>
@@ -69,6 +70,7 @@ export default function Contact() {
             
             <div className="flex flex-col gap-3">
               <h2 className="font-faktum text-[10px] lg:text-xs font-bold tracking-[0.3em] uppercase opacity-50 mb-1 border-b border-black/20 pb-2 inline-block">More</h2>
+              <a href="https://dhrutiswain.substack.com/" target="_blank" rel="noreferrer" className="font-faktum text-sm lg:text-base font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">Substack</a>
               <a href="https://linktr.ee/dhrutinandan" target="_blank" rel="noreferrer" className="font-faktum text-sm lg:text-base font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">Linktree</a>
               <a href="https://medium.com/@dhrutinandan" target="_blank" rel="noreferrer" className="font-faktum text-sm lg:text-base font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">Medium</a>
             </div>

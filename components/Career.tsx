@@ -85,7 +85,7 @@ export default function Career() {
         <div className="sticky top-32">
           <h2 className="career-title font-display text-[15vw] lg:text-[8vw] leading-[0.8] flex flex-col">
             <span className="flex overflow-hidden"><span className="char-title block origin-bottom">Coded at</span></span>
-            <span className="flex overflow-hidden"><span className="char-title block origin-bottom text-[#ff5e00]">& History</span></span>
+            <span className="flex overflow-hidden"><span className="char-title block origin-bottom opacity-40">& History</span></span>
           </h2>
           <p className="mt-12 font-faktum text-[10px] lg:text-xs font-bold tracking-widest uppercase opacity-50 max-w-xs leading-relaxed">
             A chronological index of professional engineering, design roles, and digital architecture.
