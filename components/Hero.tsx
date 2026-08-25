@@ -273,7 +273,6 @@ export default function Hero() {
       const px = pointerPosRef.current.x;
       const py = pointerPosRef.current.y;
       const prevY = pointerPosRef.current.prevY;
-      const isPressed = pointerPosRef.current.isDown;
       const centerX = width / 2;
       const centerY = height / 2;
 
@@ -371,13 +370,7 @@ export default function Hero() {
             const pluckForce = deltaY * 0.4;
             pt.vy += Math.max(-22 * dpr, Math.min(22 * dpr, pluckForce));
 
-            // Sound only fires while actually pressed/touching (a real "swipe"), not on
-            // pure hover. Hovering still bends the string visually - but hover
-            // (pointermove) is never a browser "user gesture", so audio triggered from
-            // it gets silently blocked until some other click unlocks it. Gating on a
-            // press means the very interaction that makes sound is also the gesture
-            // that unlocks the AudioContext, so it works on the first try every time.
-            if (isPressed && st.cooldown <= 0 && Math.abs(pt.vy) > 7 * dpr) {
+            if (st.cooldown <= 0 && Math.abs(pt.vy) > 7 * dpr) {
               st.cooldown = 20;
               playGuitarStringSound(st.freq, Math.abs(pt.vy));
 
@@ -457,7 +450,7 @@ export default function Hero() {
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full flex flex-col justify-between pt-24 pb-6 px-10 lg:px-24 lg:border-r-[1.5px] border-black">
         {/* Main Text */}
         <div className="relative flex flex-col justify-center flex-1">
-          <h1 className="font-display text-[22vw] lg:text-[18vw] leading-[0.95] tracking-wide uppercase flex flex-col whitespace-nowrap origin-left">
+          <h1 className="font-display text-[12vw] lg:text-[18vw] leading-[0.95] tracking-wide uppercase flex flex-col whitespace-nowrap origin-left">
             <span className="flex overflow-hidden">
               {nameWord1.map((char, index) => (
                 <span key={`w1-${index}`} className="char block origin-bottom">{char}</span>
@@ -496,7 +489,12 @@ export default function Hero() {
         {/* Styled Brutalist Sound Mute/Unmute Button (Top Right) */}
         <div className="absolute top-6 right-6 lg:top-8 lg:right-8 z-20">
           <button
-            onClick={() => setSoundEnabled(!soundEnabled)}
+            onClick={() => {
+              // A real click always counts as a browser "user gesture", unlike hover -
+              // use it as a guaranteed way to unlock the AudioContext.
+              audioCtxRef.current?.resume();
+              setSoundEnabled(!soundEnabled);
+            }}
             className={`px-3.5 py-2 rounded-full font-faktum text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 border shadow-lg hover:scale-105 active:scale-95 cursor-pointer ${
               soundEnabled
                 ? "bg-black/90 text-white border-[#F4F1EA]/60 hover:border-[#F4F1EA] shadow-[#F4F1EA]/10"

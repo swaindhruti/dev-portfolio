@@ -28,17 +28,17 @@ export default function Contact() {
   }, []);
 
   return (
-    <main ref={containerRef} className="w-full min-h-screen flex flex-col justify-center px-6 lg:px-24 bg-background text-foreground overflow-hidden">
-      
+    <main ref={containerRef} className="w-full min-h-screen flex flex-col justify-center px-6 sm:px-8 md:px-12 lg:px-24 bg-background text-foreground overflow-hidden">
+
       <div className="flex flex-col lg:flex-row lg:items-end justify-between mt-24 lg:mt-0">
-        
+
         {/* Massive Title */}
-        <div className="mb-20 lg:mb-4 lg:w-2/3">
-          <h1 className="font-display text-[22vw] lg:text-[18vw] leading-[0.85] uppercase flex items-end">
+        <div className="mb-16 lg:mb-4 lg:w-2/3">
+          <h1 className="font-display text-[13vw] sm:text-[11vw] md:text-[9vw] lg:text-[7.5vw] leading-[0.9] uppercase flex items-end flex-wrap">
             <span className="flex overflow-hidden flex-wrap">
               {titleChars.map((char, index) => (
                 char === " " ? (
-                  <span key={index} className="inline-block w-[4vw] lg:w-[2vw]">&nbsp;</span>
+                  <span key={index} className="inline-block w-[3vw] sm:w-[2.5vw] lg:w-[1.5vw]">&nbsp;</span>
                 ) : (
                   <span key={index} className="contact-char block origin-bottom">{char}</span>
                 )
@@ -48,12 +48,12 @@ export default function Contact() {
         </div>
 
         {/* Links Column */}
-        <div className="flex flex-col gap-12 lg:gap-16 lg:mb-8 lg:w-1/3">
-          
+        <div className="flex flex-col gap-10 lg:gap-16 lg:mb-8 lg:w-1/3">
+
           <div className="contact-detail">
             <h2 className="font-faktum text-[10px] lg:text-xs font-bold tracking-[0.3em] uppercase opacity-50 mb-3 border-b border-black/20 pb-2 inline-block">Email</h2>
             <div>
-              <a href="mailto:dhrutinandan.dev@gmail.com" className="font-faktum text-2xl lg:text-4xl font-medium tracking-wide hover:opacity-60 transition-opacity">
+              <a href="mailto:dhrutinandan.dev@gmail.com" className="font-faktum text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium tracking-wide hover:opacity-60 transition-opacity break-all">
                 dhrutinandan.dev@gmail.com
               </a>
             </div>

@@ -96,9 +96,11 @@ export default function Work() {
       </div>
 
       {/* FULL-SCREEN PROJECT CASE STUDY MODAL */}
-      {activeProject && (
+      {activeProject && activeIdx !== null && (
         <ProjectModal
           project={activeProject}
+          currentIndex={activeIdx}
+          total={PROJECTS.length}
           onClose={closeModal}
           onNavigate={navigateModal}
         />

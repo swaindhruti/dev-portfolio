@@ -78,9 +78,15 @@ export default function About() {
         <button className="about-btn px-10 lg:px-12 py-5 lg:py-6 bg-black text-background rounded-full font-faktum text-xs lg:text-sm font-bold tracking-[0.2em] uppercase hover:scale-110 transition-transform duration-300">
           Projects
         </button>
-        <button className="about-btn px-10 lg:px-12 py-5 lg:py-6 bg-black/10 border-2 border-transparent hover:border-black hover:scale-110 text-foreground rounded-full font-faktum text-xs lg:text-sm font-bold tracking-[0.2em] uppercase transition-all duration-300">
-          Experience
-        </button>
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noreferrer"
+          download
+          className="about-btn inline-flex items-center justify-center px-10 lg:px-12 py-5 lg:py-6 bg-black/10 border-2 border-transparent hover:border-black hover:scale-110 text-foreground rounded-full font-faktum text-xs lg:text-sm font-bold tracking-[0.2em] uppercase transition-all duration-300"
+        >
+          Resume
+        </a>
       </div>
     </section>
   );
