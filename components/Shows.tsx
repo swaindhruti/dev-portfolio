@@ -117,7 +117,7 @@ export default function Shows() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative w-full min-h-screen px-6 lg:px-24 py-32 bg-background text-foreground z-10 overflow-hidden">
+    <section ref={containerRef} className="relative w-full min-h-screen px-6 sm:px-8 md:px-12 lg:px-24 py-32 bg-background text-foreground z-10 overflow-hidden">
       
       {/* Title & Navigation */}
       <div className="mb-16 pl-2 flex justify-between items-end">
@@ -140,7 +140,7 @@ export default function Shows() {
             className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-black flex items-center justify-center hover:scale-105 transition-transform group"
             aria-label="Previous"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform w-6 h-6 lg:w-8 lg:h-8">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--background)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform w-6 h-6 lg:w-8 lg:h-8">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
           </button>
@@ -149,7 +149,7 @@ export default function Shows() {
             className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-black flex items-center justify-center hover:scale-105 transition-transform group"
             aria-label="Next"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform w-6 h-6 lg:w-8 lg:h-8">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--background)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform w-6 h-6 lg:w-8 lg:h-8">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
@@ -159,7 +159,7 @@ export default function Shows() {
       {/* Carousel */}
       <div 
         ref={carouselRef}
-        className="flex gap-6 lg:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth shows-scroll-container pr-6 lg:pr-24"
+        className="flex gap-6 lg:gap-8 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth shows-scroll-container pr-6 sm:pr-8 md:pr-12 lg:pr-24"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         <style>{`
@@ -168,7 +168,7 @@ export default function Shows() {
           }
         `}</style>
         {showsData.map((show, index) => (
-          <div key={index} className="show-card flex-none w-[80vw] md:w-[40vw] lg:w-[22vw] flex flex-col font-faktum snap-start">
+          <div key={index} className="show-card flex-none w-[80vw] sm:w-[55vw] md:w-[38vw] lg:w-[24vw] xl:w-[20vw] flex flex-col font-faktum snap-start">
             {/* Image Placeholder */}
             <div className={`group w-full aspect-3/4 ${show.color} rounded-2xl mb-4 relative overflow-hidden flex items-center justify-center`}>
               {show.imageId ? (

@@ -9,12 +9,12 @@ export default function About() {
   const containerRef = useRef<HTMLElement>(null);
   
   const bioLines = [
-    <>I'm a Mining Engineer and Software Engineer by passion</>,
-    <>from Odisha, India. I used to make aeronautics drones</>,
-    <>and robot stuff, and I'm a massive fan of Carl Sagan.</>,
-    <>I love to work with architecture and all things code.</>,
-    <>I'm a huge fan of movies and theaters, and I also</>,
-    <>enjoy making <Link href="https://youtube.com/" target="_blank" className="italic underline decoration-2 underline-offset-4 transition-colors duration-300">YouTube</Link> videos!</>
+    <>I'm a self-taught engineer who builds backend</>,
+    <>systems and AI-powered products from the ground up.</>,
+    <>Building and flying drones is my favorite hobby,</>,
+    <>and I share most of that journey on <Link href="https://twitter.com/D_SwainX" target="_blank" className="italic underline decoration-2 underline-offset-4 transition-colors duration-300">X</Link>.</>,
+    <>Fun fact — I'm a Mining Engineer by degree,</>,
+    <>software just turned out to be my real calling.</>
   ];
 
   useEffect(() => {

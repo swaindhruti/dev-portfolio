@@ -96,7 +96,7 @@ export default function Career() {
       {/* Right Pane - Scrolling Job List */}
       <div className="w-full lg:w-7/12 flex flex-col">
         {careerData.map((job, index) => (
-          <div key={index} className="career-row group flex flex-col justify-center px-6 lg:px-24 py-8 lg:py-16 border-b-[1.5px] border-black last:border-b-0 hover:bg-black hover:text-background transition-colors duration-500 cursor-pointer min-h-[35vh]">
+          <div key={index} className="career-row group flex flex-col justify-center px-6 lg:px-24 py-8 lg:py-16 border-b-[1.5px] border-black last:border-b-0 hover:bg-black hover:text-background transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer min-h-[35vh]">
 
             {/* Top Meta Data */}
             <div className="flex justify-between items-start mb-8 lg:mb-12">
@@ -115,7 +115,7 @@ export default function Career() {
 
             {/* Role Badge */}
             <div className="mt-6 lg:mt-10">
-              <span className="font-faktum text-xs lg:text-sm font-bold tracking-widest uppercase opacity-80 inline-block border-[1.5px] border-black group-hover:border-background/30 rounded-full px-5 py-2 group-hover:translate-x-6 transition-all duration-500 delay-75 ease-[cubic-bezier(0.23,1,0.32,1)]">
+              <span className="font-faktum text-xs lg:text-sm font-bold tracking-widest uppercase opacity-80 inline-block border-[1.5px] border-black group-hover:border-background/30 rounded-full px-5 py-2 group-hover:translate-x-6 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]">
                 {job.role}
               </span>
             </div>
