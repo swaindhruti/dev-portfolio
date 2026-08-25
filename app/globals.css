@@ -3,11 +3,13 @@
 :root {
   --background: #F4F1EA; /* Warm Cream / Paper Off-White */
   --foreground: #000000; /* Black text */
+  --accent: var(--background); /* Same cream, used on black surfaces (e.g. Hero panel) */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
   --font-display: var(--font-manuka);
   --font-faktum: var(--font-faktum);
 }

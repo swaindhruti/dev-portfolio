@@ -39,19 +39,16 @@ export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const rightPanelRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   const nameWord1 = "DHRUTI".split("");
   const nameWord2 = ".SWAIN".split("");
 
-  const [isMounted, setIsMounted] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   const pointerPosRef = useRef({ x: -1000, y: -1000, prevX: -1000, prevY: -1000, isDown: false });
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
-    setIsMounted(true);
-
     // Left side GSAP animation
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
@@ -78,23 +75,51 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
+  // Create the AudioContext eagerly on mount (it starts "suspended" per browser
+  // autoplay policy) so the first pluck doesn't pay for lazy construction.
+  useEffect(() => {
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtxRef.current = new AudioContextClass();
+    }
+    return () => {
+      audioCtxRef.current?.close();
+      audioCtxRef.current = null;
+    };
+  }, []);
+
+  // Hovering the strings (pointermove) is NOT a browser "user gesture", so resume()
+  // calls made from hover alone are silently ignored - that's why sound only ever
+  // worked after clicking the sound toggle button first. Unlock on the first real
+  // gesture anywhere on the page (pointerdown/touchstart/keydown), same as a click.
+  useEffect(() => {
+    const unlock = () => {
+      audioCtxRef.current?.resume();
+    };
+    window.addEventListener("pointerdown", unlock, { once: true });
+    window.addEventListener("touchstart", unlock, { once: true });
+    window.addEventListener("keydown", unlock, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("keydown", unlock);
+    };
+  }, []);
+
   // Web Audio API Acoustic Guitar Synthesizer
   const playGuitarStringSound = (frequency: number, force: number) => {
     if (!soundEnabled) return;
 
     try {
-      if (!audioCtxRef.current) {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-        if (AudioContextClass) {
-          audioCtxRef.current = new AudioContextClass();
-        }
-      }
-
       const audioCtx = audioCtxRef.current;
       if (!audioCtx) return;
 
-      if (audioCtx.state === "suspended") {
+      if (audioCtx.state !== "running") {
+        // Context isn't unlocked yet - kick off resume() and skip this pluck
+        // rather than scheduling a note against a frozen/suspended clock, which
+        // is what produced silent "first hover" attempts.
         audioCtx.resume();
+        return;
       }
 
       const now = audioCtx.currentTime;
@@ -248,6 +273,7 @@ export default function Hero() {
       const px = pointerPosRef.current.x;
       const py = pointerPosRef.current.y;
       const prevY = pointerPosRef.current.prevY;
+      const isPressed = pointerPosRef.current.isDown;
       const centerX = width / 2;
       const centerY = height / 2;
 
@@ -256,6 +282,13 @@ export default function Hero() {
 
       ctx.save();
       ctx.translate(centerX, centerY);
+
+      // Ambient Glow behind the soundhole
+      const soundholeGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, gScale * 0.6);
+      soundholeGlow.addColorStop(0, "rgba(244, 241, 234, 0.08)");
+      soundholeGlow.addColorStop(1, "rgba(244, 241, 234, 0)");
+      ctx.fillStyle = soundholeGlow;
+      ctx.fillRect(-gScale * 1.4, -gScale * 1.4, gScale * 2.8, gScale * 2.8);
 
       // Guitar Soundhole Outer Glow Ring
       ctx.beginPath();
@@ -289,7 +322,7 @@ export default function Hero() {
       // Guitar Bridge Plate
       ctx.fillStyle = "#121216";
       ctx.fillRect(-gScale * 0.8, -gScale * 0.25, gScale * 0.08, gScale * 0.5);
-      ctx.strokeStyle = "rgba(255, 94, 0, 0.4)";
+      ctx.strokeStyle = "rgba(244, 241, 234, 0.4)";
       ctx.strokeRect(-gScale * 0.8, -gScale * 0.25, gScale * 0.08, gScale * 0.5);
 
       // Guitar Nut / Fretboard Right Side
@@ -308,8 +341,8 @@ export default function Hero() {
         ctx.moveTo(st.points[0].x, st.points[0].y);
 
         // Precision Pluck Distance Radius (Tight radius so strings are plucked individually one by one!)
-        const maxDistY = 14 * dpr;
-        const maxDistX = 35 * dpr;
+        const maxDistY = 9 * dpr;
+        const maxDistX = 22 * dpr;
 
         for (let j = 0; j < st.points.length; j++) {
           const pt = st.points[j];
@@ -330,12 +363,22 @@ export default function Hero() {
           const distX = Math.abs(px - pt.x);
           const distY = Math.abs(py - pt.y);
 
-          if (distX < maxDistX && distY < maxDistY) {
-            const pluckForce = (py - prevY) * 0.55 || (py - st.y) * 0.45;
-            pt.vy += Math.max(-28 * dpr, Math.min(28 * dpr, pluckForce));
+          // Only pluck on actual pointer motion. A stationary cursor resting inside
+          // the hit box used to fall back to a distance-based force every frame,
+          // which kept re-triggering the string and produced a stuck buzzing noise.
+          const deltaY = py - prevY;
+          if (distX < maxDistX && distY < maxDistY && Math.abs(deltaY) > 0.9 * dpr) {
+            const pluckForce = deltaY * 0.4;
+            pt.vy += Math.max(-22 * dpr, Math.min(22 * dpr, pluckForce));
 
-            if (st.cooldown <= 0 && Math.abs(pt.vy) > 4 * dpr) {
-              st.cooldown = 12;
+            // Sound only fires while actually pressed/touching (a real "swipe"), not on
+            // pure hover. Hovering still bends the string visually - but hover
+            // (pointermove) is never a browser "user gesture", so audio triggered from
+            // it gets silently blocked until some other click unlocks it. Gating on a
+            // press means the very interaction that makes sound is also the gesture
+            // that unlocks the AudioContext, so it works on the first try every time.
+            if (isPressed && st.cooldown <= 0 && Math.abs(pt.vy) > 7 * dpr) {
+              st.cooldown = 20;
               playGuitarStringSound(st.freq, Math.abs(pt.vy));
 
               for (let k = 0; k < 3; k++) {
@@ -346,7 +389,7 @@ export default function Hero() {
                   vy: (Math.random() - 0.5) * 5 * dpr,
                   alpha: 1,
                   size: (Math.random() * 2.2 + 1.2) * dpr,
-                  color: st.color === "#F4F1EA" ? "#F4F1EA" : "#ffffff",
+                  color: st.color,
                 });
               }
             }
@@ -369,7 +412,7 @@ export default function Hero() {
 
         // Note Badge
         ctx.font = `700 ${9 * dpr}px mono`;
-        ctx.fillStyle = st.color === "#F4F1EA" ? "#F4F1EA" : "rgba(255, 255, 255, 0.4)";
+        ctx.fillStyle = st.color === "#F4F1EA" ? st.color : "rgba(255, 255, 255, 0.4)";
         ctx.fillText(st.note, 30 * dpr, st.points[2].y - 5 * dpr);
       });
 
@@ -411,10 +454,10 @@ export default function Hero() {
   return (
     <section ref={containerRef} className="relative w-full h-dvh flex flex-col lg:flex-row overflow-hidden bg-background text-foreground">
       {/* Left Content Half */}
-      <div className="w-full lg:w-1/2 h-1/2 lg:h-full flex flex-col justify-between pt-24 pb-6 px-6 lg:px-24 lg:border-r-[1.5px] border-black">
+      <div className="w-full lg:w-1/2 h-1/2 lg:h-full flex flex-col justify-between pt-24 pb-6 px-10 lg:px-24 lg:border-r-[1.5px] border-black">
         {/* Main Text */}
         <div className="relative flex flex-col justify-center flex-1">
-          <h1 className="font-display text-[22vw] lg:text-[19vw] leading-[0.95] tracking-wide uppercase flex flex-col whitespace-nowrap origin-left ml-2">
+          <h1 className="font-display text-[22vw] lg:text-[18vw] leading-[0.95] tracking-wide uppercase flex flex-col whitespace-nowrap origin-left">
             <span className="flex overflow-hidden">
               {nameWord1.map((char, index) => (
                 <span key={`w1-${index}`} className="char block origin-bottom">{char}</span>
@@ -436,15 +479,15 @@ export default function Hero() {
       </div>
 
       {/* Right Art Half - Minimalist Vector Guitar Synthesizer */}
-      <div 
-        ref={rightPanelRef} 
+      <div
+        ref={rightPanelRef}
         className="w-full lg:w-1/2 h-1/2 lg:h-full bg-[#050505] relative border-t-[1.5px] lg:border-t-0 border-black overflow-hidden select-none flex items-center justify-center group touch-none"
       >
         {/* Subtle Background Grid */}
-        <div 
-          className="absolute inset-0 opacity-[0.06] pointer-events-none" 
-          style={{ 
-            backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)', 
+        <div
+          className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{
+            backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
             backgroundSize: '40px 40px',
             backgroundPosition: '50% 50%'
           }}
@@ -455,8 +498,8 @@ export default function Hero() {
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
             className={`px-3.5 py-2 rounded-full font-faktum text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 border shadow-lg hover:scale-105 active:scale-95 cursor-pointer ${
-              soundEnabled 
-                ? "bg-black/90 text-white border-[#F4F1EA]/60 hover:border-[#F4F1EA] shadow-[#F4F1EA]/10" 
+              soundEnabled
+                ? "bg-black/90 text-white border-[#F4F1EA]/60 hover:border-[#F4F1EA] shadow-[#F4F1EA]/10"
                 : "bg-black/70 text-white/50 border-white/10 hover:border-white/30"
             }`}
             title={soundEnabled ? "Mute Guitar Sound" : "Enable Guitar Sound"}
@@ -480,8 +523,8 @@ export default function Hero() {
         </div>
 
         {/* Interactive Guitar & Precision Strings Canvas */}
-        <canvas 
-          ref={canvasRef} 
+        <canvas
+          ref={canvasRef}
           className="w-full h-full relative z-10 cursor-grab active:cursor-grabbing touch-none"
         />
 

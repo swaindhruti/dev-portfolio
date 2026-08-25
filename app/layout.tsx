@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import FloatingContact from "@/components/FloatingContact";
 import Navigation from "@/components/Navigation";
 import "./globals.css";
 
@@ -71,7 +70,6 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-faktum">
         <Navigation />
         {children}
-        <FloatingContact />
       </body>
     </html>
   );
