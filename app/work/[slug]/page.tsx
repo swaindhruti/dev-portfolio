@@ -39,7 +39,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const nav = getProjectNav(slug);
   if (!nav) notFound();
-  const { project, index, prev, next } = nav;
+  const { project, index } = nav;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -61,8 +61,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         currentIndex={index}
         total={PROJECTS.length}
         backHref="/work"
-        prevHref={`/work/${prev.id}`}
-        nextHref={`/work/${next.id}`}
       />
     </>
   );

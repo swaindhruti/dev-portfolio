@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Project } from "@/data/projects";
 
 interface ProjectModalProps {
@@ -11,17 +10,20 @@ interface ProjectModalProps {
   currentIndex: number;
   total: number;
   backHref: string;
-  prevHref: string;
-  nextHref: string;
-  // True only when rendered via the intercepted (.)work/[slug] route - closing
-  // there must use router.back() to correctly pop back to the exact prior
-  // history entry and restore the @modal slot to its default (empty) state.
-  // router.push() to the same URL instead pushes a *new* entry, which leaves
-  // the modal slot stuck and needs an extra back navigation to clear.
+  // True only when rendered via the intercepted (.)work/[slug] route (opened
+  // by clicking a project from /work while already in the app). Closing there
+  // must use router.back() - the Next.js-documented way to dismiss an
+  // intercepted route - because it returns to the *exact* history entry that
+  // existed before the modal opened, which is what correctly collapses the
+  // @modal slot back to its default (empty) state. router.push/replace to the
+  // same URL instead leave that slot stuck, making the page underneath
+  // unresponsive until a real back navigation happens.
+  // The standalone page (direct visit / hard reload / crawler) has no such
+  // prior history entry, so it falls back to a normal push to backHref.
   closeWithBack?: boolean;
 }
 
-export default function ProjectModal({ project, currentIndex, total, backHref, prevHref, nextHref, closeWithBack }: ProjectModalProps) {
+export default function ProjectModal({ project, currentIndex, total, backHref, closeWithBack }: ProjectModalProps) {
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   const dialogContentRef = useRef<HTMLDivElement>(null);
@@ -35,18 +37,7 @@ export default function ProjectModal({ project, currentIndex, total, backHref, p
     };
   }, []);
 
-  // router.push isn't prefetched the way <Link> is - prefetch the sibling
-  // routes so prev/next stays instant.
-  useEffect(() => {
-    router.prefetch(prevHref);
-    router.prefetch(nextHref);
-  }, [router, prevHref, nextHref]);
-
   // One-time entrance animation when the modal mounts (opening a project).
-  // Deliberately has an empty dependency array so it never re-fires on
-  // navigation - it used to depend on [project.id] and would run again on
-  // every prev/next click, fighting handleNavigate's own tween on the same
-  // element/properties. That collision was the source of the janky switch.
   useEffect(() => {
     if (hasEnteredRef.current) return;
     hasEnteredRef.current = true;
@@ -74,65 +65,21 @@ export default function ProjectModal({ project, currentIndex, total, backHref, p
     gsap.to(modalRef.current, { opacity: 0, duration: 0.35, ease: "power2.in", onComplete: close });
   };
 
-  const handleNavigate = (direction: "prev" | "next") => {
-    const href = direction === "next" ? nextHref : prevHref;
-    if (!dialogContentRef.current) {
-      router.push(href);
-      return;
-    }
-    const exitX = direction === "next" ? -32 : 32;
-    gsap.to(dialogContentRef.current, {
-      opacity: 0,
-      x: exitX,
-      duration: 0.3,
-      ease: "power2.in",
-      onComplete: () => {
-        router.push(href);
-        // Wait a frame so the new project's content has committed before the
-        // enter tween starts - it's invisible at that point anyway, but this
-        // avoids animating in against layout that's still catching up.
-        requestAnimationFrame(() => {
-          if (!dialogContentRef.current) return;
-          gsap.fromTo(
-            dialogContentRef.current,
-            { opacity: 0, x: -exitX },
-            { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }
-          );
-        });
-      },
-    });
-  };
-
   return (
     <div ref={modalRef} className="fixed inset-0 z-[200] bg-black text-background">
       <div className="h-screen w-full flex flex-col px-6 lg:px-14 py-6 lg:py-10">
         {/* Header */}
-        <div className="grid grid-cols-3 items-center mb-10 lg:mb-14 shrink-0">
-          <button
-            onClick={handleClose}
-            className="justify-self-start font-faktum font-bold uppercase tracking-[0.2em] text-[10px] lg:text-xs border border-background rounded-full px-6 py-3 lg:px-7 lg:py-3.5 hover:bg-background hover:text-black transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
-          >
-            Close
-          </button>
-
-          <span className="justify-self-center font-faktum font-bold text-[10px] lg:text-xs tracking-[0.3em] uppercase opacity-50">
+        <div className="flex justify-between items-center mb-10 lg:mb-14 shrink-0">
+          <span className="font-faktum font-bold text-[10px] lg:text-xs tracking-[0.3em] uppercase opacity-50">
             {String(currentIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </span>
 
-          <div className="justify-self-end flex gap-3">
-            <button
-              onClick={() => handleNavigate("prev")}
-              className="w-11 h-11 lg:w-12 lg:h-12 rounded-full border border-background flex items-center justify-center hover:bg-background hover:text-black transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group cursor-pointer"
-            >
-              <ArrowLeft size={18} strokeWidth={2} className="group-hover:-translate-x-1 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]" />
-            </button>
-            <button
-              onClick={() => handleNavigate("next")}
-              className="w-11 h-11 lg:w-12 lg:h-12 rounded-full border border-background flex items-center justify-center hover:bg-background hover:text-black transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group cursor-pointer"
-            >
-              <ArrowRight size={18} strokeWidth={2} className="group-hover:translate-x-1 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]" />
-            </button>
-          </div>
+          <button
+            onClick={handleClose}
+            className="font-faktum font-bold uppercase tracking-[0.2em] text-[10px] lg:text-xs border border-background rounded-full px-6 py-3 lg:px-7 lg:py-3.5 hover:bg-background hover:text-black transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer"
+          >
+            Close
+          </button>
         </div>
 
         {/* Animated Content Wrapper */}

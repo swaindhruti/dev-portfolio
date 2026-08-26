@@ -63,9 +63,9 @@ export default function About() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative w-full min-h-dvh flex flex-col justify-center px-6 lg:px-24 py-32 bg-background text-foreground z-10 overflow-hidden">
+    <section ref={containerRef} className="relative w-full min-h-dvh flex flex-col justify-center px-6 lg:px-20 py-32 bg-background text-foreground z-10 overflow-hidden">
 
-      <div className="max-w-[95%] lg:max-w-[85%] mt-16 lg:mt-0 font-faktum font-medium text-[5.5vw] lg:text-[2.5vw] leading-[1.3] tracking-tight">
+      <div className="max-w-[95%] lg:max-w-[98%] mt-16 lg:mt-0 font-faktum font-medium text-[5.5vw] lg:text-[2.5vw] leading-[1.3] tracking-tight">
         {bioLines.map((line, index) => (
           <span key={index} className="overflow-hidden inline-block pb-1 lg:pb-2 mr-2">
             <span className="about-line inline-block origin-bottom-left">{line}</span>

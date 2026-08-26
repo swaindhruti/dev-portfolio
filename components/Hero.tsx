@@ -447,7 +447,7 @@ export default function Hero() {
   return (
     <section ref={containerRef} className="relative w-full h-dvh flex flex-col lg:flex-row overflow-hidden bg-background text-foreground">
       {/* Left Content Half */}
-      <div className="w-full lg:w-1/2 h-1/2 lg:h-full flex flex-col justify-between pt-24 pb-6 px-10 lg:px-24 lg:border-r-[1.5px] border-black">
+      <div className="w-full lg:w-1/2 h-1/2 lg:h-full flex flex-col justify-between pt-24 pb-6 px-10 lg:px-20 lg:border-r-[1.5px] border-black">
         {/* Main Text */}
         <div className="relative flex flex-col justify-center flex-1">
           <h1 className="font-display text-[12vw] lg:text-[18vw] leading-[0.95] tracking-wide uppercase flex flex-col whitespace-nowrap origin-left">

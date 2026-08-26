@@ -6,7 +6,7 @@ export default async function InterceptedProjectModal({ params }: { params: Prom
   const { slug } = await params;
   const nav = getProjectNav(slug);
   if (!nav) notFound();
-  const { project, index, prev, next } = nav;
+  const { project, index } = nav;
 
   return (
     <ProjectModal
@@ -14,8 +14,6 @@ export default async function InterceptedProjectModal({ params }: { params: Prom
       currentIndex={index}
       total={PROJECTS.length}
       backHref="/work"
-      prevHref={`/work/${prev.id}`}
-      nextHref={`/work/${next.id}`}
       closeWithBack
     />
   );
