@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navigation from "@/components/Navigation";
+import StructuredData from "@/components/StructuredData";
 import "./globals.css";
 
 const displayFont = localFont({
@@ -17,35 +18,29 @@ const faktum = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL('https://dhrutinandan.space'),
   title: {
-    default: "Dhrutinandan Swain | Developer & Designer",
+    default: "Dhrutinandan Swain | Backend, AI & Full-Stack Engineer",
     template: "%s | Dhrutinandan Swain",
   },
-  description: "Creative developer and digital product designer crafting architectural, neo-brutalist web experiences.",
-  keywords: ["Frontend Developer", "Web Designer", "Creative Developer", "Next.js", "React", "Portfolio", "Dhrutinandan Swain"],
-  authors: [{ name: "Dhrutinandan Swain" }],
+  description: "Dhrutinandan Swain is a self-taught Backend, AI and Full-Stack Engineer based in Odisha, India, available for freelance work.",
+  keywords: ["Backend Engineer", "AI Engineer", "Full-Stack Engineer", "Freelance Software Engineer", "Next.js", "Node.js", "Dhrutinandan Swain"],
+  authors: [{ name: "Dhrutinandan Swain", url: "https://dhrutinandan.space" }],
   creator: "Dhrutinandan Swain",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://dhrutinandan.space",
-    title: "Dhrutinandan Swain | Creative Developer",
-    description: "Creative developer and digital product designer crafting architectural web experiences.",
-    siteName: "Dhrutinandan Swain Portfolio",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Dhrutinandan Swain Portfolio",
-      },
-    ],
+    title: "Dhrutinandan Swain | Backend, AI & Full-Stack Engineer",
+    description: "Self-taught Backend, AI and Full-Stack Engineer based in Odisha, India, available for freelance work.",
+    siteName: "Dhrutinandan Swain",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dhrutinandan Swain | Creative Developer",
-    description: "Creative developer and digital product designer crafting architectural web experiences.",
+    title: "Dhrutinandan Swain | Backend, AI & Full-Stack Engineer",
+    description: "Self-taught Backend, AI and Full-Stack Engineer based in Odisha, India, available for freelance work.",
     creator: "@D_SwainX",
-    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -62,14 +57,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en" className={`${displayFont.variable} ${faktum.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-faktum">
+        <StructuredData />
         <Navigation />
         {children}
+        {modal}
       </body>
     </html>
   );

@@ -1,7 +1,15 @@
 import { MetadataRoute } from 'next';
+import { PROJECTS } from '@/data/projects';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://dhrutinandan.space';
+
+  const projectUrls: MetadataRoute.Sitemap = PROJECTS.map((project) => ({
+    url: `${baseUrl}/work/${project.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }));
 
   return [
     {
@@ -16,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    ...projectUrls,
     {
       url: `${baseUrl}/blogs`,
       lastModified: new Date(),

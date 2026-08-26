@@ -116,3 +116,14 @@ export const PROJECTS: Project[] = [
     demoLink: "https://github.com/swaindhruti",
   }
 ];
+
+export function getProjectNav(slug: string) {
+  const index = PROJECTS.findIndex((p) => p.id === slug);
+  if (index === -1) return null;
+  return {
+    project: PROJECTS[index],
+    index,
+    prev: PROJECTS[(index - 1 + PROJECTS.length) % PROJECTS.length],
+    next: PROJECTS[(index + 1) % PROJECTS.length],
+  };
+}

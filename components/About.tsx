@@ -7,22 +7,22 @@ import Link from "next/link";
 
 export default function About() {
   const containerRef = useRef<HTMLElement>(null);
-  
+
   const bioLines = [
-    <>I'm a self-taught engineer who builds backend</>,
+    <>I&apos;m a self-taught engineer who builds backend</>,
     <>systems and AI-powered products from the ground up.</>,
     <>Building and flying drones is my favorite hobby,</>,
     <>and I share most of that journey on <Link href="https://twitter.com/D_SwainX" target="_blank" className="italic underline decoration-2 underline-offset-4 transition-colors duration-300">X</Link>.</>,
-    <>Fun fact — I'm a Mining Engineer by degree,</>,
+    <>Fun fact — I&apos;m a Mining Engineer by degree,</>,
     <>software just turned out to be my real calling.</>
   ];
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
+
     const ctx = gsap.context(() => {
       const textLines = gsap.utils.toArray(".about-line");
-      
+
       // Reveal the text line by line
       gsap.fromTo(
         textLines,
@@ -40,7 +40,7 @@ export default function About() {
           }
         }
       );
-      
+
       // Animate buttons
       gsap.fromTo(
         ".about-btn",
@@ -64,7 +64,7 @@ export default function About() {
 
   return (
     <section ref={containerRef} className="relative w-full min-h-dvh flex flex-col justify-center px-6 lg:px-24 py-32 bg-background text-foreground z-10 overflow-hidden">
-      
+
       <div className="max-w-[95%] lg:max-w-[85%] mt-16 lg:mt-0 font-faktum font-medium text-[5.5vw] lg:text-[2.5vw] leading-[1.3] tracking-tight">
         {bioLines.map((line, index) => (
           <span key={index} className="overflow-hidden inline-block pb-1 lg:pb-2 mr-2">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Project } from "@/data/projects";
@@ -9,11 +10,19 @@ interface ProjectModalProps {
   project: Project;
   currentIndex: number;
   total: number;
-  onClose: () => void;
-  onNavigate: (direction: "prev" | "next") => void;
+  backHref: string;
+  prevHref: string;
+  nextHref: string;
+  // True only when rendered via the intercepted (.)work/[slug] route - closing
+  // there must use router.back() to correctly pop back to the exact prior
+  // history entry and restore the @modal slot to its default (empty) state.
+  // router.push() to the same URL instead pushes a *new* entry, which leaves
+  // the modal slot stuck and needs an extra back navigation to clear.
+  closeWithBack?: boolean;
 }
 
-export default function ProjectModal({ project, currentIndex, total, onClose, onNavigate }: ProjectModalProps) {
+export default function ProjectModal({ project, currentIndex, total, backHref, prevHref, nextHref, closeWithBack }: ProjectModalProps) {
+  const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   const dialogContentRef = useRef<HTMLDivElement>(null);
   const hasEnteredRef = useRef(false);
@@ -25,6 +34,13 @@ export default function ProjectModal({ project, currentIndex, total, onClose, on
       document.body.style.overflow = "";
     };
   }, []);
+
+  // router.push isn't prefetched the way <Link> is - prefetch the sibling
+  // routes so prev/next stays instant.
+  useEffect(() => {
+    router.prefetch(prevHref);
+    router.prefetch(nextHref);
+  }, [router, prevHref, nextHref]);
 
   // One-time entrance animation when the modal mounts (opening a project).
   // Deliberately has an empty dependency array so it never re-fires on
@@ -47,18 +63,21 @@ export default function ProjectModal({ project, currentIndex, total, onClose, on
     }
   }, []);
 
+  const close = () => (closeWithBack ? router.back() : router.push(backHref));
+
   const handleClose = () => {
     if (!modalRef.current || !dialogContentRef.current) {
-      onClose();
+      close();
       return;
     }
     gsap.to(dialogContentRef.current, { opacity: 0, y: 16, scale: 0.98, duration: 0.3, ease: "power2.in" });
-    gsap.to(modalRef.current, { opacity: 0, duration: 0.35, ease: "power2.in", onComplete: onClose });
+    gsap.to(modalRef.current, { opacity: 0, duration: 0.35, ease: "power2.in", onComplete: close });
   };
 
   const handleNavigate = (direction: "prev" | "next") => {
+    const href = direction === "next" ? nextHref : prevHref;
     if (!dialogContentRef.current) {
-      onNavigate(direction);
+      router.push(href);
       return;
     }
     const exitX = direction === "next" ? -32 : 32;
@@ -68,7 +87,7 @@ export default function ProjectModal({ project, currentIndex, total, onClose, on
       duration: 0.3,
       ease: "power2.in",
       onComplete: () => {
-        onNavigate(direction);
+        router.push(href);
         // Wait a frame so the new project's content has committed before the
         // enter tween starts - it's invisible at that point anyway, but this
         // avoids animating in against layout that's still catching up.
