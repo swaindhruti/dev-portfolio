@@ -41,16 +41,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   if (!nav) notFound();
   const { project, index } = nav;
 
+  const codeRepository = project.links.find((link) => link.label === "GitHub" || link.label === "GitLab")?.url;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
     name: project.title,
     description: project.description,
     author: { "@type": "Person", name: "Dhrutinandan Swain", url: "https://dhrutinandan.space" },
-    codeRepository: project.codeLink,
+    ...(codeRepository ? { codeRepository } : {}),
     url: `https://dhrutinandan.space/work/${project.id}`,
     keywords: project.techStack.join(", "),
-    dateCreated: project.timeline,
   };
 
   return (

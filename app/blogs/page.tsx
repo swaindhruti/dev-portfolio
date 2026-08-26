@@ -5,6 +5,12 @@ import gsap from "gsap";
 
 const blogs = [
   {
+    title: "Transactions 101",
+    date: "13 AUG 2026",
+    category: "THREAD",
+    link: "https://x.com/D_SwainX/status/2087841732171829466"
+  },
+  {
     title: "Blockchain 101",
     date: "2 JUNE 2025",
     category: "WEB3",
@@ -24,7 +30,7 @@ export default function Blogs() {
         { yPercent: 100 },
         { yPercent: 0, duration: 1.2, stagger: 0.08, ease: "power4.out" }
       );
-      
+
       // List stagger animation
       gsap.fromTo(
         ".blog-row",
@@ -38,7 +44,7 @@ export default function Blogs() {
 
   return (
     <main ref={containerRef} className="w-full min-h-screen pt-32 px-6 lg:px-24 bg-background text-foreground overflow-hidden pb-32">
-      
+
       {/* Massive Title */}
       <div className="mb-16">
         <h1 className="font-display text-[20vw] lg:text-[14vw] leading-[0.8] tracking-wide uppercase flex items-end">
@@ -57,14 +63,14 @@ export default function Blogs() {
       {/* Blog List */}
       <div className="flex flex-col border-t border-black blog-list">
         {blogs.map((blog, idx) => (
-          <a 
-            key={idx} 
+          <a
+            key={idx}
             href={blog.link}
             target="_blank"
             rel="noopener noreferrer"
             className="blog-row group border-b border-black flex flex-col md:flex-row md:items-center justify-between py-8 lg:py-12 cursor-pointer transition-colors duration-500 hover:bg-black hover:text-background px-4 lg:px-6"
           >
-            
+
             <div className="flex items-center w-full md:w-3/4">
               <span className="font-faktum text-sm lg:text-base font-bold tracking-widest opacity-40 group-hover:opacity-100 transition-opacity w-12 lg:w-20 shrink-0">
                 0{idx + 1}
@@ -74,7 +80,7 @@ export default function Blogs() {
                 {blog.title}
               </h2>
             </div>
-            
+
             <div className="flex flex-row md:flex-col justify-between md:items-end md:w-1/4 mt-6 md:mt-0 font-faktum font-bold tracking-widest text-[10px] lg:text-xs uppercase">
               <span className="opacity-80 mb-1 border-b border-current pb-1">{blog.category}</span>
               <span className="opacity-50">{blog.date}</span>

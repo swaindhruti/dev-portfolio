@@ -68,7 +68,7 @@ export default function Work() {
 
             <div className="flex flex-row md:flex-col justify-between md:items-end md:w-1/4 mt-6 md:mt-0 font-faktum font-bold tracking-widest text-[10px] lg:text-xs uppercase">
               <span className="opacity-80 mb-1 border-b border-current pb-1">{project.category}</span>
-              <span className="opacity-50">{project.timeline}</span>
+              <span className="opacity-50">{project.role}</span>
             </div>
 
           </Link>

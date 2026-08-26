@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Work",
-  description: "Selected full-stack, AI and platform engineering projects by Dhrutinandan Swain, including PharmaStock, CLinqer, Nutriscan, Plastrack and D2A Studio.",
+  description: "Selected backend, AI and full-stack engineering projects by Dhrutinandan Swain, including PharmaStock, Clinqo, NutriScan and Plastrack.",
   alternates: { canonical: "/work" },
 };
 

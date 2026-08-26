@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Blogs",
-  description: "Notes and writing by Dhrutinandan Swain on software engineering, backend systems and web3, published on Medium.",
+  description: "Notes and writing by Dhrutinandan Swain on software engineering, backend systems and web3, published on Medium and X.",
   alternates: { canonical: "/blogs" },
 };
 

@@ -6,25 +6,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const careerData = [
   {
-    role: "Founder",
-    company: "D2A Studio",
+    role: "Lead Backend Engineer",
+    company: "Clinqo",
     date: "JAN 2026 - PRESENT",
-    logo: "D2A",
+    logo: "CLINQO",
   },
   {
-    role: "Backend Engineer",
-    company: "N6T Tech",
-    date: "FEB 2026 - PRESENT",
-    logo: "N6T",
-  },
-  {
-    role: "Software Engineer",
+    role: "Frontend Engineer",
     company: "Scogo AI",
     date: "AUG 2025 - NOV 2025",
     logo: "SCOGO",
   },
   {
-    role: "Full Stack Intern",
+    role: "Full Stack Engineer",
     company: "GoUnplan",
     date: "MAY 2025 - AUG 2025",
     logo: "GOUNPLAN",

@@ -120,22 +120,31 @@ export default function ProjectModal({ project, currentIndex, total, backHref, c
             <div className="lg:w-4/12 flex flex-col justify-start shrink-0 lg:border-l border-background/20 lg:pl-10 pt-2 lg:pt-0">
               <div className="grid grid-cols-2 lg:grid-cols-1 gap-6 lg:gap-10 mb-10">
                 <div>
-                  <h3 className="font-faktum font-bold text-[10px] tracking-[0.3em] uppercase opacity-50 mb-2">Timeline</h3>
-                  <p className="font-faktum font-bold text-sm lg:text-base tracking-widest uppercase">{project.timeline}</p>
+                  <h3 className="font-faktum font-bold text-[10px] tracking-[0.3em] uppercase opacity-50 mb-2">Category</h3>
+                  <p className="font-faktum font-bold text-sm lg:text-base tracking-widest uppercase">{project.category}</p>
                 </div>
                 <div>
                   <h3 className="font-faktum font-bold text-[10px] tracking-[0.3em] uppercase opacity-50 mb-2">Role</h3>
-                  <p className="font-faktum font-bold text-sm lg:text-base tracking-widest uppercase">{project.category}</p>
+                  <p className="font-faktum font-bold text-sm lg:text-base tracking-widest uppercase">{project.role}</p>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row lg:flex-col gap-3 mt-auto lg:mt-0">
-                <a href={project.demoLink} target="_blank" rel="noreferrer" className="font-faktum font-bold text-[10px] lg:text-xs tracking-[0.2em] uppercase bg-background text-black border border-background rounded-full px-8 py-4 hover:bg-transparent hover:text-background transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] text-center flex-1 lg:flex-none">
-                  Launch Project
-                </a>
-                <a href={project.codeLink} target="_blank" rel="noreferrer" className="font-faktum font-bold text-[10px] lg:text-xs tracking-[0.2em] uppercase border border-background rounded-full px-8 py-4 hover:bg-background hover:text-black transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] text-center flex-1 lg:flex-none">
-                  View Repository
-                </a>
+                {project.links.map((link, i) => (
+                  <a
+                    key={link.label}
+                    href={link.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`font-faktum font-bold text-[10px] lg:text-xs tracking-[0.2em] uppercase border border-background rounded-full px-8 py-4 transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] text-center flex-1 lg:flex-none ${
+                      i === 0
+                        ? "bg-background text-black hover:bg-transparent hover:text-background"
+                        : "hover:bg-background hover:text-black"
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                ))}
               </div>
             </div>
 
