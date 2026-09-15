@@ -11,6 +11,18 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    id: "devflow",
+    title: "DevFlow Workspace Orchestrator",
+    category: "Backend",
+    tagline: "A terminal-first workspace manager that runs, streams, and inspects your projects without leaving the keyboard.",
+    description: "A local-first terminal workspace manager built with Bubble Tea. Register projects once, then run saved shell commands with live streamed output, monitor Docker containers, and inspect Git status — all without leaving the keyboard.",
+    role: "Backend & Systems Engineer",
+    techStack: ["Go", "Bubble Tea", "Bubbles", "Lip Gloss", "go-colorful", "YAML", "JSON", "Git CLI", "Docker CLI"],
+    links: [
+      { label: "GitHub", url: "https://github.com/swaindhruti/devflow-workspace-orchestrator" },
+    ],
+  },
+  {
     id: "pharmastock",
     title: "PharmaStock",
     category: "Backend",

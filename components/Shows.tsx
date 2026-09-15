@@ -57,7 +57,7 @@ const showsData = [
   }
 ];
 
-const titleChars = "I love shows".split("");
+const titleChars = "Worth Watching".split("");
 
 export default function Shows() {
   const containerRef = useRef<HTMLElement>(null);
@@ -121,7 +121,7 @@ export default function Shows() {
       
       {/* Title & Navigation */}
       <div className="mb-16 pl-2 flex justify-between items-end">
-        <h2 className="font-display text-[15vw] lg:text-[8vw] leading-[0.8] tracking-wideer flex items-end">
+        <h2 className="font-display text-[15vw] lg:text-[8vw] leading-[1.05] tracking-wideer flex items-end">
           <span className="flex overflow-hidden">
             {titleChars.map((char, index) => (
               char === " " ? (
@@ -168,9 +168,9 @@ export default function Shows() {
           }
         `}</style>
         {showsData.map((show, index) => (
-          <div key={index} className="show-card flex-none w-[80vw] sm:w-[55vw] md:w-[38vw] lg:w-[24vw] xl:w-[20vw] flex flex-col font-faktum snap-start">
+          <div key={index} className="show-card flex-none w-[85vw] sm:w-[62vw] md:w-[44vw] lg:w-[29vw] xl:w-[24vw] flex flex-col font-faktum snap-start">
             {/* Image Placeholder */}
-            <div className={`group w-full aspect-3/4 ${show.color} rounded-2xl mb-4 relative overflow-hidden flex items-center justify-center`}>
+            <div className={`group w-full aspect-[4/5] ${show.color} rounded-2xl mb-4 relative overflow-hidden flex items-center justify-center`}>
               {show.imageId ? (
                 <Image
                   width={960}
@@ -188,11 +188,10 @@ export default function Shows() {
             {/* Header Info */}
             <div className="flex justify-between items-start mb-4">
               <div className="pr-4">
-                <h3 className="font-extrabold text-[11px] lg:text-xs uppercase tracking-widest leading-tight mb-1">{show.title}</h3>
-                <p className="text-[9px] lg:text-[10px] uppercase tracking-widest opacity-60">{show.genre}</p>
+                <h3 className="font-extrabold text-sm lg:text-base uppercase tracking-widest leading-tight mb-1">{show.title}</h3>
               </div>
               <div className="border border-black rounded px-1.5 py-0.5 text-[8px] uppercase tracking-widest font-bold opacity-60 shrink-0 mt-0.5">
-                {show.tag}
+                {show.genre}
               </div>
             </div>
           </div>

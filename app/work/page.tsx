@@ -62,7 +62,7 @@ export default function Work() {
 
               {/* Title with original, authentic casing (No forced ALL CAPS) */}
               <h2 className="font-faktum text-4xl sm:text-5xl lg:text-7xl xl:text-[7rem] leading-none transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] tracking-tight group-hover:translate-x-2">
-                {project.title}
+                {project.title.split(" ")[0]}
               </h2>
             </div>
 

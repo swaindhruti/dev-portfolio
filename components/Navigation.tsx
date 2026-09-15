@@ -7,7 +7,7 @@ export default function Navigation() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div id="global-nav" className="fixed top-4 left-4 lg:top-6 lg:left-6 z-100">
+    <div id="global-nav" className="fixed top-2 left-2 lg:top-3 lg:left-3 z-100">
       <div 
         className={`bg-black overflow-hidden transition-[max-width,height] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] rounded-2xl inline-flex items-center ${
           isHovered ? "max-w-[600px] lg:max-w-[800px] h-14 lg:h-16" : "max-w-[56px] lg:max-w-[64px] h-14 lg:h-16"
