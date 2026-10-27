@@ -92,7 +92,7 @@ const structuredData = {
       email: `mailto:${site.email}`,
       address: {
         "@type": "PostalAddress",
-        addressLocality: site.location.city,
+        addressRegion: site.location.region,
         addressCountry: site.location.country,
       },
       alumniOf: { "@type": "CollegeOrUniversity", name: "National Institute of Technology Rourkela" },

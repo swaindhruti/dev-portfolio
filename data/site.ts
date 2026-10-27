@@ -15,7 +15,7 @@ export const site = {
     "Backend, AI and full-stack engineer building Go and Python backends, RAG systems and Next.js apps. Open for freelance software development and UI/UX design.",
   /** Freelance work on offer, for structured data and the About page. */
   services: ["Freelance software development", "UI/UX design"],
-  location: { city: "Bengaluru", country: "India" },
+  location: { region: "Odisha", country: "India" },
   timeZone: "Asia/Kolkata",
   twitterHandle: "@D_SwainX",
   email: "dhrutinandan.dev@gmail.com",
@@ -44,7 +44,7 @@ export const about = {
     author: "martin kleppmann",
   },
   env: [
-    { label: "location", value: "Bengaluru, India" },
+    { label: "location", value: "Odisha, India" },
     { label: "education", value: "NIT Rourkela · 2027" },
     { label: "currently", value: "SDE @ clinqo" },
     { label: "status", value: "open for freelance · software & ui/ux" },
