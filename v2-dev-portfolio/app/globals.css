@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+/* ---------- tokens ---------- */
+
+:root {
+  --bg: #000000;
+  --fg: #ecebe6;
+  --dim: #8b8a85;
+  --hi: #ffffff;
+  --faint: #3a3a38;
+  --rule: #1c1c1b;
+  --ring: #2a2a28;
+  --well: #0d0d0c;
+
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Light mode is the dark palette inverted, as in the design. */
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --fg: #131419;
+  --dim: #74757a;
+  --hi: #000000;
+  --faint: #c5c5c7;
+  --rule: #e3e3e4;
+  --ring: #d5d5d7;
+  --well: #f2f2f3;
+}
+
+@theme {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-dim: var(--dim);
+  --color-hi: var(--hi);
+  --color-faint: var(--faint);
+  --color-rule: var(--rule);
+  --color-ring: var(--ring);
+  --color-well: var(--well);
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
+  --ease-fold: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- base ---------- */
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  body {
+    color: var(--fg);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--hi);
+  }
+
+  ::selection {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  :focus-visible {
+    outline: 1px dashed var(--fg);
+    outline-offset: 3px;
+  }
+
+  button {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+}
+
+/* ---------- components ---------- */
+
+@layer components {
+  /* Full-viewport terminal screen. */
+  .screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  /* The ASCII canvas paints light-on-black; flip it for light mode. */
+  [data-theme="light"] .ascii-canvas {
+    filter: invert(1);
+  }
+
+  .photo {
+    filter: grayscale(1) contrast(1.08);
+    transition: filter 450ms ease;
+  }
+
+  .photo[data-on="true"] {
+    filter: grayscale(0) contrast(1);
+  }
+
+  /* Theme toggle label is chosen by CSS so the server HTML never mismatches. */
+  .theme-label-light,
+  [data-theme="light"] .theme-label-dark {
+    display: inline;
+  }
+
+  .theme-label-dark,
+  [data-theme="light"] .theme-label-light {
+    display: none;
+  }
+
+  .graph-line {
+    background: repeating-linear-gradient(to bottom, var(--dim) 0 2px, transparent 2px 7px);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Page entry: navigation swaps pages instantly, then the new page fades in. */
+  .page-enter {
+    animation: dn-fade 360ms ease backwards;
+  }
+
+  /*
+   * Staggered entry: blocks rise and un-blur in sequence. Set --i on each block for its slot.
+   * `backwards` fill means nothing lingers once the animation ends (no stray transforms).
+   */
+  .rise {
+    animation: dn-rise 640ms var(--ease-out) backwards;
+    animation-delay: calc(var(--rise-base, 60ms) + var(--i, 0) * 70ms);
+  }
+
+  /* Children of a block that mounts on interaction start rising immediately. */
+  .rise-now {
+    --rise-base: 0ms;
+  }
+
+  /* Re-entry for content swapped in place (keyed elements). */
+  .swap {
+    animation: dn-rise 420ms var(--ease-out) backwards;
+  }
+
+  .swap + .swap {
+    animation-delay: 60ms;
+  }
+
+  .fade-in {
+    animation: dn-fade 900ms ease backwards;
+    animation-delay: calc(var(--rise-base, 60ms) + var(--i, 0) * 70ms);
+  }
+}
+
+@keyframes dn-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(3px);
+  }
+}
+
+@keyframes dn-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dncaret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- theme switch ---------- */
+
+/* The theme toggle crossfades the whole page (View Transitions API). */
+::view-transition {
+  pointer-events: none;
+}
+
+html[data-theme-switching]::view-transition-old(root),
+html[data-theme-switching]::view-transition-new(root) {
+  animation-duration: 600ms;
+  animation-timing-function: ease;
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0s !important;
+  }
+}
