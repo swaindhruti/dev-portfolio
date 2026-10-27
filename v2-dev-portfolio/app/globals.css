@@ -67,6 +67,15 @@
     color: var(--hi);
   }
 
+  /* Every scroll area still scrolls (wheel, touch, keys); the bars themselves are hidden. */
+  * {
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
   ::selection {
     background: var(--fg);
     color: var(--bg);
@@ -131,14 +140,6 @@
 
   .graph-line {
     background: repeating-linear-gradient(to bottom, var(--dim) 0 2px, transparent 2px 7px);
-  }
-
-  .no-scrollbar {
-    scrollbar-width: none;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
   }
 
   /* Page entry: navigation swaps pages instantly, then the new page fades in. */

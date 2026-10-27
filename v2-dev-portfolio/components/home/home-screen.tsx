@@ -3,10 +3,18 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
+import { slot } from "@/lib/motion";
 import { quietScramble } from "../scramble";
 import { SiteFooter } from "../site-footer";
 import { SiteHeader } from "../site-header";
 import { HandshakeEngine } from "./handshake-engine";
+
+/**
+ * Set once the name and UI have shown in this tab. Next keeps a page you leave mounted but hidden
+ * and re-runs its effects when you come back; without this, returning home replayed the intro
+ * over the already-visible tagline. A full page load starts fresh and plays it again.
+ */
+let introDone = false;
 
 export function HomeScreen({ monoFamily, nameFamily }: { monoFamily: string; nameFamily: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -22,15 +30,20 @@ export function HomeScreen({ monoFamily, nameFamily }: { monoFamily: string; nam
     const fromNav = window.location.hash === "#home";
     if (fromNav) window.history.replaceState(null, "", window.location.pathname + window.location.search);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const onUi = (show: boolean) => {
+      if (show) introDone = true;
+      setUi(show);
+    };
 
     const engine = new HandshakeEngine(canvas, {
       monoFamily,
       nameFamily,
       nameHeight: 0.3,
-      skipIntro: fromNav || reduced,
+      skipIntro: introDone || fromNav || reduced,
+      animateEntry: !reduced,
       cursorFx: !reduced,
       onLog: setLog,
-      onUi: setUi,
+      onUi,
       onTagTop: setTagTop,
     });
     engineRef.current = engine;
@@ -96,14 +109,15 @@ export function HomeScreen({ monoFamily, nameFamily }: { monoFamily: string; nam
           style={{ top: tagTop }}
         >
           <h1 className="sr-only">
-            {site.name} — {site.role}
+            {site.name} — {site.jobTitle}
           </h1>
-          <p className="m-0 text-center text-sm leading-[1.6] text-pretty text-dim" style={arrive(250)}>
+          {/* `rise` replays the page entry whenever home is shown again; `arrive` reveals it after the intro. */}
+          <p className="rise m-0 text-center text-sm leading-[1.6] text-pretty text-dim" style={slot(6, arrive(250))}>
             <span className="text-fg">{site.role}</span> — {site.tagline}
           </p>
           <div
-            className="flex flex-wrap justify-center gap-3"
-            style={{ ...arrive(420), pointerEvents: ui ? "auto" : "none" }}
+            className="rise flex flex-wrap justify-center gap-3"
+            style={slot(8, { ...arrive(420), pointerEvents: ui ? "auto" : "none" })}
           >
             <Link
               href="/work"

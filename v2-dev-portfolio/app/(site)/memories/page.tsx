@@ -5,14 +5,15 @@ import { MemoryCarousel } from "@/components/memories/memory-carousel";
 import { memories } from "@/data/memories";
 import { site } from "@/data/site";
 import { formatDate } from "@/lib/format";
+import { ogImage } from "@/lib/og";
 
 const description = `Hackathons, conferences, meetups and milestones — ${memories.length} days ${site.name} thinks are worth keeping.`;
 
 export const metadata: Metadata = {
-  title: "Memories",
+  title: "memories",
   description,
   alternates: { canonical: "/memories" },
-  openGraph: { url: "/memories", title: `Memories · ${site.name}`, description },
+  openGraph: { url: "/memories", title: `Memories · ${site.name}`, description, images: [ogImage] },
 };
 
 export default function MemoriesPage() {

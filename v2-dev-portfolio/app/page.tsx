@@ -16,7 +16,7 @@ const display = Big_Shoulders({
 });
 
 export const metadata: Metadata = {
-  title: { absolute: `${site.name} — ${site.role}` },
+  title: { absolute: site.name },
   alternates: { canonical: "/" },
 };
 

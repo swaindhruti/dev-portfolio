@@ -32,7 +32,6 @@ export function MemoryCarousel({ memories }: { memories: Memory[] }) {
   const [narrow, setNarrow] = useState(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const els = useRef(new Map<string, HTMLElement>());
   const poses = useRef(new Map<string, Pose>());
@@ -101,15 +100,10 @@ export function MemoryCarousel({ memories }: { memories: Memory[] }) {
         ? [Math.min(W * 0.92, (H * 0.5) / 0.75) / bw, 0, -H * 0.2]
         : [Math.min(W * 0.44, 560, (H * 0.78) / 0.75) / bw, -W * 0.21, 0];
       layout.current = { W, H, bw, ox, oy, rx, ry, selS, selX, selY };
-      const ring = ringRef.current;
-      if (ring) {
-        ring.style.width = `${rx * 2}px`;
-        ring.style.height = `${ry * 2}px`;
-      }
-      for (const el of [ring, labelRef.current]) {
-        if (!el) continue;
-        el.style.left = `${W / 2 + ox}px`;
-        el.style.top = `${H / 2 + oy}px`;
+      const label = labelRef.current;
+      if (label) {
+        label.style.left = `${W / 2 + ox}px`;
+        label.style.top = `${H / 2 + oy}px`;
       }
       setNarrow(isNarrow);
     };
@@ -254,7 +248,7 @@ export function MemoryCarousel({ memories }: { memories: Memory[] }) {
     setHov((h) => (h === id ? null : h));
   }, []);
 
-  const ringOpacity = cur ? 0 : 1;
+  const labelOpacity = cur ? 0 : 1;
   const controls = (compact: boolean) => (
     <div className={`flex flex-wrap text-dim ${compact ? "gap-x-5 gap-y-2" : "gap-x-[22px] gap-y-2 pt-[18px]"}`}>
       <button type="button" onClick={() => step(-1)} className={`cursor-pointer whitespace-nowrap hover:text-hi ${compact ? "py-2.5" : "py-1.5"}`}>
@@ -278,14 +272,8 @@ export function MemoryCarousel({ memories }: { memories: Memory[] }) {
       className="relative min-h-0 flex-auto cursor-grab touch-none select-none"
     >
       <div
-        ref={ringRef}
-        aria-hidden="true"
-        className="fade-in pointer-events-none absolute top-1/2 left-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-ring transition-opacity duration-[400ms]"
-        style={slot(1, { opacity: ringOpacity })}
-      />
-      <div
         ref={labelRef}
-        style={slot(3, { opacity: ringOpacity })}
+        style={slot(3, { opacity: labelOpacity })}
         className="fade-in pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 text-center leading-5 text-dim transition-opacity duration-[400ms]"
       >
         <span className="text-[13px] text-hi">~/memories</span>

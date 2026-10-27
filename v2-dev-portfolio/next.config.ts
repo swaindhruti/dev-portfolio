@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
   },
   cacheComponents: true,
+  images: {
+    // Memory photos are hosted on ImageKit.
+    remotePatterns: [new URL("https://ik.imagekit.io/devdsfolio/**")],
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

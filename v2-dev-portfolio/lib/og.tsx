@@ -3,6 +3,12 @@ import { site } from "@/data/site";
 
 export const ogSize = { width: 1200, height: 630 };
 
+/**
+ * Link-preview image for every page: a screenshot of the home screen (public/og.jpg, 1200×630).
+ * Pages set it explicitly because a page's own `openGraph` replaces the layout's entirely.
+ */
+export const ogImage = { url: "/og.jpg", ...ogSize, alt: `${site.name} — ${site.jobTitle}` };
+
 /** Shared terminal-style social card. */
 export function terminalCard({ command, title, subtitle }: { command: string; title: string; subtitle: string }) {
   return new ImageResponse(

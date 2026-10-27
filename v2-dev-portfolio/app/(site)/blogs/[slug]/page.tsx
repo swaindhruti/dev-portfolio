@@ -5,12 +5,15 @@ import { CommandBar } from "@/components/command-bar";
 import { JsonLd } from "@/components/json-ld";
 import { PageEnter } from "@/components/page-enter";
 import { Scramble } from "@/components/scramble";
-import { getPost, posts } from "@/data/blogs";
+import { getPost, localPosts } from "@/data/blogs";
 import { absoluteUrl, site } from "@/data/site";
 import { slot } from "@/lib/motion";
 
+// Only posts written on this site get a page; posts with an external `url` link straight out.
+// Cache Components needs at least one param, so a placeholder (rendered as a 404) stands in
+// while every post lives elsewhere.
 export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
+  return localPosts.length ? localPosts.map((p) => ({ slug: p.slug })) : [{ slug: "__none__" }];
 }
 
 export async function generateMetadata({ params }: PageProps<"/blogs/[slug]">): Promise<Metadata> {

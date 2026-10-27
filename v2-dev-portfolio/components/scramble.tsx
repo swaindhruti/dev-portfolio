@@ -29,17 +29,20 @@ export function useScramble(label: string, { interval = 30, autoplay = false, de
   const play = useCallback(() => {
     clearInterval(timer.current);
     if (prefersReducedMotion()) return;
-    let k = 0;
+    // Half a character per frame (the design's pace), but long labels speed up so a run never
+    // takes more than ~36 frames; a 75-character title would otherwise take ~4s to resolve.
+    const rate = Math.max(0.5, label.length / 36);
+    let revealed = 0;
     timer.current = setInterval(() => {
-      k++;
-      if (k / 2 >= label.length) {
+      revealed += rate;
+      if (revealed >= label.length) {
         clearInterval(timer.current);
         setFrame(null);
         return;
       }
       const text = label
         .split("")
-        .map((c, j) => (j < k / 2 || c === " " || c === "." ? c : CHARS[(Math.random() * CHARS.length) | 0]))
+        .map((c, j) => (j < revealed || c === " " || c === "." ? c : CHARS[(Math.random() * CHARS.length) | 0]))
         .join("");
       setFrame({ label, text });
     }, interval);
@@ -51,7 +54,16 @@ export function useScramble(label: string, { interval = 30, autoplay = false, de
     return () => clearTimeout(t);
   }, [autoplay, delay, play]);
 
-  useEffect(() => () => clearInterval(timer.current), []);
+  // Next keeps a route you navigate away from mounted but hidden, which runs this cleanup without
+  // unmounting. Stopping the timer alone would freeze a half-scrambled frame until the route is
+  // shown again, so the real label is restored too.
+  useEffect(
+    () => () => {
+      clearInterval(timer.current);
+      setFrame(null);
+    },
+    [],
+  );
 
   return [frame && frame.label === label ? frame.text : label, play] as const;
 }

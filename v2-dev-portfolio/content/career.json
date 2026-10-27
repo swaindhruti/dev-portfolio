@@ -1,0 +1,53 @@
+{
+  "roles": [
+    {
+      "id": "clinqo",
+      "from": "2026-01",
+      "to": "present",
+      "title": "Software Engineer I",
+      "company": "Clinqo",
+      "place": "Remote",
+      "type": "full-time",
+      "points": [
+        "Building a multi-user agentic RAG chat app in Go, with multilingual support and document ingestion.",
+        "Cut p95 latency 300ms → 33ms (9× faster) with indexing and Redis caching.",
+        "Automated reminders with Celery workers, cutting manual staff work by 80%."
+      ]
+    },
+    {
+      "id": "scogo",
+      "from": "2026-07",
+      "to": "2026-10",
+      "title": "Full Stack Engineer",
+      "company": "Scogo",
+      "place": "Mumbai",
+      "type": "internship",
+      "points": [
+        "Raised throughput 45% by moving slow GraphQL work to BullMQ workers.",
+        "Added a Redis cache that answers ~78% of lookups.",
+        "Streamed LLM replies: first response in 1.2s instead of ~8s."
+      ]
+    },
+    {
+      "id": "gounplan",
+      "from": "2025-01",
+      "to": "2025-06",
+      "title": "Backend Engineer",
+      "company": "GoUnplan",
+      "place": "Kharagpur",
+      "type": "internship",
+      "points": [
+        "Cut p95 latency 270ms → 180ms with query optimisation, indexing and Redis caching.",
+        "Built an idempotent payment gateway, so a retried request never charges twice.",
+        "Retried failed payments with BullMQ, cutting the failure rate by 60%."
+      ]
+    }
+  ],
+  "stack": {
+    "languages": ["go", "typescript", "python", "sql"],
+    "backend": ["echo", "node", "bun", "rpc", "graphql", "django"],
+    "frontend": ["next.js", "react", "react native", "tanstack"],
+    "db": ["postgres", "mongodb", "qdrant", "redis", "pgvector", "pinecone"],
+    "infra": ["docker", "nginx", "aws", "gcp", "ci/cd"]
+  }
+}

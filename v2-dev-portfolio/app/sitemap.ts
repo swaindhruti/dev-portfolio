@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { posts } from "@/data/blogs";
+import { localPosts, posts } from "@/data/blogs";
 import { absoluteUrl } from "@/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -20,7 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: p.priority,
       ...(p.path === "/blogs" && latestPost ? { lastModified: latestPost } : {}),
     })),
-    ...posts.map((p) => ({
+    // External posts (e.g. on X) aren't pages on this site, so only local ones are listed.
+    ...localPosts.map((p) => ({
       url: absoluteUrl(`/blogs/${p.slug}`),
       lastModified: p.date,
       changeFrequency: "yearly" as const,

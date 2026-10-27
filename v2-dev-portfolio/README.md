@@ -15,19 +15,21 @@ A terminal-styled developer portfolio, built from the Claude Design handoff with
 
 ## Editing content
 
-All copy lives in typed files under `data/`:
+- **Career, Work, Blogs, Memories:** plain JSON in `content/` (`career.json`, `work.json`, `blogs.json`, `memories.json`). Add, edit or delete entries there; no code changes. See `content/README.md` for every field.
+- **Name, links, about page:** `data/site.ts`.
 
-- `data/site.ts`: name, domain, socials, email, about page copy. **Replace the placeholder handles and email.**
-- `data/career.ts`, `data/work.ts`, `data/blogs.ts`, `data/memories.ts`
-
-Memory photos: drop a 4:3 image in `public/memories/` and set `image: "/memories/<file>.jpg"` on the entry.
+Memory photos: drop a 4:3 image in `public/memories/` and set `"image": "/memories/<file>.jpg"` on the entry.
 
 Set `NEXT_PUBLIC_SITE_URL` in production if the site is not served from `https://dhrutinandan.space`. Canonical URLs, the sitemap and JSON-LD all use it.
+
+To verify the site in Google Search Console, pick the "HTML tag" method and set
+`GOOGLE_SITE_VERIFICATION` to the `content` value Google shows; the meta tag is added for you.
+Then submit `https://dhrutinandan.space/sitemap.xml` there.
 
 ## SEO
 
 - Per-route `metadata` / `generateMetadata` with canonical URLs, Open Graph and Twitter cards
-- Generated OG images (`app/opengraph-image.tsx`, plus one per blog post)
+- Link-preview image `public/og.jpg` (1200×630, a home-screen screenshot; replace the file to update it), plus a generated one per on-site blog post
 - `sitemap.xml`, `robots.txt`, web manifest, icons
 - JSON-LD: `Person` + `WebSite` site-wide, `ProfilePage`, `Blog` / `BlogPosting` + `BreadcrumbList`, project `ItemList`
 - Every page is statically prerendered; interactive parts are client islands that receive server-rendered data, so all content is in the initial HTML

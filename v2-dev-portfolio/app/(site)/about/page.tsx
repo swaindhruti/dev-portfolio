@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
+import { RunnerGame } from "@/components/about/runner-game";
 import { Clock } from "@/components/clock";
 import { CommandBar } from "@/components/command-bar";
 import { JsonLd } from "@/components/json-ld";
 import { PageEnter } from "@/components/page-enter";
 import { about, absoluteUrl, site } from "@/data/site";
 import { slot } from "@/lib/motion";
+import { ogImage } from "@/lib/og";
 
 const description = `${about.lead} ${about.body}`;
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "about",
   description,
   alternates: { canonical: "/about" },
-  openGraph: { type: "profile", url: "/about", title: `About · ${site.name}`, description },
+  openGraph: { type: "profile", url: "/about", title: `About · ${site.name}`, description, images: [ogImage] },
 };
 
 const label = "leading-5 text-dim";
@@ -77,6 +79,10 @@ export default function AboutPage() {
                 ))}
               </dl>
             </aside>
+          </div>
+
+          <div className="rise pt-16" style={slot(7)}>
+            <RunnerGame />
           </div>
         </main>
       </div>

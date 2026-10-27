@@ -1,3 +1,8 @@
+import raw from "@/content/blogs.json";
+import { assertUnique, byDateDesc } from "@/lib/content";
+
+// Edit content/blogs.json to change this data; see content/README.md.
+
 export type Post = {
   slug: string;
   /** ISO date, YYYY-MM-DD */
@@ -5,69 +10,35 @@ export type Post = {
   /** Minutes */
   read: number;
   title: string;
+  /** Categories; a post can have several. They drive the tag filters. */
   tags: string[];
   excerpt: string;
-  body: string[];
+  /** Where the article lives (e.g. an X article). The list links straight out to it. */
+  url?: string;
+  /** Write the article on this site instead: one string per paragraph, served at /blogs/<slug>. */
+  body?: string[];
 };
 
-/** Newest first. */
-export const posts: Post[] = [
-  {
-    slug: "kafka-at-2am",
-    date: "2026-10-12",
-    read: 6,
-    title: "What Kafka taught me at 2am",
-    tags: ["systems"],
-    excerpt: "Consumer lag, a pager, and the three settings I now check first.",
-    body: [
-      "The pager went off at 2:07. Consumer lag on the billing topic had climbed past two million messages and was still rising.",
-      "The fix turned out to be one line in a config file. Finding that line took four hours, and taught me more about Kafka than the docs ever did.",
-      "These are the three settings I now check before anything else — and why their defaults are rarely what you want.",
-    ],
-  },
-  {
-    slug: "ascii-hands",
-    date: "2026-09-03",
-    read: 4,
-    title: "Drawing hands with 9 characters",
-    tags: ["frontend", "nerdy"],
-    excerpt: "How the intro on this site turns a photo of hands into a canvas of text.",
-    body: [
-      "The intro on this site is two hands, a handshake, and a name — all drawn with nine characters.",
-      "Under the hood it's a density map: every cell of the grid samples a source image and picks a glyph by how much ink it needs.",
-      "The hard part wasn't the drawing. It was making fingers move without the whole thing turning into soup.",
-    ],
-  },
-  {
-    slug: "boring-apis",
-    date: "2026-07-21",
-    read: 5,
-    title: "In defence of boring APIs",
-    tags: ["systems", "career"],
-    excerpt: "The best API I've shipped is the one nobody has asked a question about.",
-    body: [
-      "The best API I've shipped is the one nobody has ever messaged me about.",
-      "Boring means predictable names, consistent errors, and pagination that works the same way everywhere.",
-      "None of it is clever. All of it saves someone an afternoon.",
-    ],
-  },
-  {
-    slug: "first-year",
-    date: "2026-05-02",
-    read: 3,
-    title: "Notes from my first year as an engineer",
-    tags: ["career"],
-    excerpt: "Ask early, write things down, and read other people's code.",
-    body: [
-      "A year in, the lessons that stuck are smaller than I expected.",
-      "Ask early. Write things down. Read other people's code, especially the parts nobody wants to touch.",
-      "And ship the small version first — it's almost always enough.",
-    ],
-  },
-];
+/** A post written on this site, with its own page. */
+export type LocalPost = Post & { body: string[] };
+
+const FILE = "content/blogs.json";
+
+const checked: Post[] = assertUnique(raw.posts satisfies Post[], "slug", FILE);
+for (const p of checked) {
+  if (!p.url && !p.body?.length) throw new Error(`${FILE}: post "${p.slug}" needs a "url" or a "body"`);
+}
+
+/** Newest first, whatever order the file is in. */
+export const posts: Post[] = checked.sort(byDateDesc);
+
+export const isLocal = (p: Post): p is LocalPost => !p.url && !!p.body?.length;
+
+/** Posts that get a page on this site (no external `url`), newest first. */
+export const localPosts: LocalPost[] = posts.filter(isLocal);
 
 export function getPost(slug: string) {
-  const i = posts.findIndex((p) => p.slug === slug);
+  const i = localPosts.findIndex((p) => p.slug === slug);
   if (i < 0) return null;
-  return { post: posts[i], next: posts[i + 1] ?? null };
+  return { post: localPosts[i], next: localPosts[i + 1] ?? null };
 }

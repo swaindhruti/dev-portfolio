@@ -5,7 +5,13 @@ import type { Project } from "@/data/work";
 import { slot } from "@/lib/motion";
 import { Scramble } from "../scramble";
 
-/** `tree`-style project list with a detail pane; ↑ / ↓ browse. */
+/** Show a URL the way you'd type it: no scheme, no "www.", no trailing slash. */
+const prettyUrl = (href: string) => href.replace(/^[a-z]+:\/\//i, "").replace(/^www\./, "").replace(/\/$/, "");
+
+/**
+ * `tree`-style project list with a detail pane; ↑ / ↓ browse. On wide screens the list scrolls on
+ * its own and the detail pane stays fixed beside it.
+ */
 export function WorkBrowser({ projects }: { projects: Project[] }) {
   const [sel, setSel] = useState(0);
   const n = projects.length;
@@ -26,30 +32,33 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [n]);
 
+  // Keep the selected row in view when browsing with the keyboard.
+  const curId = cur?.id;
+  useEffect(() => {
+    if (curId) document.getElementById(`work-${curId}`)?.scrollIntoView({ block: "nearest" });
+  }, [curId]);
+
   return (
-    <div className="flex flex-wrap items-start gap-x-[72px] gap-y-14">
-      <div className="flex min-w-0 flex-[1_1_420px] flex-col">
-        <div className="fade-in pb-2.5 leading-5 text-hi" style={slot(1)}>
-          ~/work
-        </div>
+    <div className="flex flex-col gap-14 min-[960px]:min-h-0 min-[960px]:flex-auto min-[960px]:flex-row min-[960px]:gap-[72px]">
+      <div className="flex min-w-0 flex-col pt-11 min-[960px]:flex-[1_1_0] min-[960px]:overflow-y-auto min-[960px]:pb-24">
         <ul className="m-0 list-none p-0">
           {projects.map((p, i) => {
             const active = i === sel;
             return (
-              <li key={p.id} className="rise" style={slot(i + 2)}>
+              <li key={p.id} id={`work-${p.id}`} className="rise" style={slot(i + 2)}>
                 <button
                   type="button"
                   onClick={() => setSel(i)}
                   aria-pressed={active}
                   aria-controls="work-detail"
-                  className="grid w-full cursor-pointer grid-cols-[4ch_3ch_minmax(0,1fr)_auto] items-baseline gap-x-3.5 py-3.5 text-left transition-colors duration-150 max-[480px]:grid-cols-[3ch_minmax(0,1fr)_auto]"
+                  className="grid w-full cursor-pointer grid-cols-[4ch_3ch_minmax(0,1fr)_auto] items-baseline gap-x-3.5 py-2 text-left transition-colors duration-150 max-[480px]:grid-cols-[3ch_minmax(0,1fr)_auto]"
                   style={{ color: active ? "var(--fg)" : "var(--dim)" }}
                 >
                   <span className="whitespace-pre text-faint max-[480px]:hidden" aria-hidden="true">
                     {i === n - 1 ? "└──" : "├──"}
                   </span>
                   <span>{String(i + 1).padStart(2, "0")}</span>
-                  <span className="flex min-w-0 flex-col gap-1.5">
+                  <span className="flex min-w-0 flex-col gap-1">
                     <span
                       className="text-[clamp(16px,1.9vw,22px)] leading-[1.25] font-medium transition-colors duration-150"
                       style={{ color: active ? "var(--hi)" : "var(--fg)" }}
@@ -58,7 +67,7 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
                     </span>
                     <span className="text-[13px] leading-[1.55] text-pretty">{p.summary}</span>
                   </span>
-                  <span className="flex flex-col items-end gap-1.5 whitespace-nowrap">
+                  <span className="flex flex-col items-end gap-1 whitespace-nowrap">
                     <span>{p.year}</span>
                     <span>{p.kind}</span>
                   </span>
@@ -73,7 +82,7 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
         <section
           id="work-detail"
           aria-live="polite"
-          className="rise sticky top-7 flex min-w-0 flex-[1_1_440px] flex-col gap-5"
+          className="rise flex min-w-0 flex-col gap-5 pb-14 min-[960px]:flex-[1_1_0] min-[960px]:overflow-y-auto min-[960px]:pt-11 min-[960px]:pb-24"
           style={slot(2)}
         >
           <div className="flex justify-between gap-4 leading-5 text-dim">
@@ -94,19 +103,22 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
               </li>
             ))}
           </ul>
-          {(cur.live || cur.source) && (
-            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-dim">
-              {cur.live && (
-                <a href={cur.live} target="_blank" rel="noopener noreferrer" className="py-1.5 whitespace-nowrap text-fg">
-                  live ↗<span className="sr-only"> — {cur.name}</span>
-                </a>
-              )}
-              {cur.source && (
-                <a href={cur.source} target="_blank" rel="noopener noreferrer" className="py-1.5 whitespace-nowrap text-fg">
-                  source ↗<span className="sr-only"> — {cur.name}</span>
-                </a>
-              )}
-            </div>
+          {cur.links.length > 0 && (
+            <ul key={`${cur.id}-links`} aria-label="Links" className="swap m-0 flex list-none flex-col gap-1 p-0 pt-2">
+              {cur.links.map((l) => (
+                <li key={l.href} className="grid grid-cols-[11ch_minmax(0,1fr)] items-baseline gap-x-3.5">
+                  <span className="text-dim">{l.label}</span>
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-1 text-[13px] text-fg [overflow-wrap:anywhere]"
+                  >
+                    {prettyUrl(l.href)} ↗
+                  </a>
+                </li>
+              ))}
+            </ul>
           )}
         </section>
       )}

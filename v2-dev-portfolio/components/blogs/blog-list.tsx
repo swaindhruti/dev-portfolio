@@ -47,25 +47,40 @@ export function BlogList({ posts }: { posts: Post[] }) {
 
 function PostRow({ post, index }: { post: Post; index: number }) {
   const [title, play] = useScramble(post.title, { interval: 26, autoplay: true, delay: 120 + index * 120 });
+  // Posts with a `url` live elsewhere (e.g. X); the rest have a page here.
+  const external = !!post.url;
+  const href = post.url ?? `/blogs/${post.slug}`;
+  const className =
+    "grid grid-cols-[minmax(0,11ch)_minmax(0,1fr)_auto] items-baseline gap-x-7 gap-y-1.5 py-[22px] text-dim hover:text-hi max-[640px]:grid-cols-[minmax(0,1fr)_auto]";
+  const content = (
+    <>
+      <time dateTime={post.date} className="whitespace-nowrap max-[640px]:col-span-2">
+        {post.date}
+      </time>
+      <article className="flex min-w-0 flex-col gap-2">
+        <h2 className="m-0 text-[clamp(16px,1.8vw,20px)] leading-[1.35] font-medium text-balance text-fg">
+          <ScrambleText label={post.title} text={title} />
+        </h2>
+        <p className="m-0 text-[13px] leading-[1.6] text-pretty">{post.excerpt}</p>
+      </article>
+      <span className="whitespace-nowrap">
+        {post.read} min {external ? "↗" : "→"}
+        {external && <span className="sr-only"> (opens on X)</span>}
+      </span>
+    </>
+  );
+
   return (
     <li className="rise border-t border-rule" style={slot(index + 2)}>
-      <Link
-        href={`/blogs/${post.slug}`}
-        onMouseEnter={play}
-        onFocus={play}
-        className="grid grid-cols-[minmax(0,11ch)_minmax(0,1fr)_auto] items-baseline gap-x-7 gap-y-1.5 py-[22px] text-dim hover:text-hi max-[640px]:grid-cols-[minmax(0,1fr)_auto]"
-      >
-        <time dateTime={post.date} className="whitespace-nowrap max-[640px]:col-span-2">
-          {post.date}
-        </time>
-        <article className="flex min-w-0 flex-col gap-2">
-          <h2 className="m-0 text-[clamp(16px,1.8vw,20px)] leading-[1.35] font-medium text-balance text-fg">
-            <ScrambleText label={post.title} text={title} />
-          </h2>
-          <p className="m-0 text-[13px] leading-[1.6] text-pretty">{post.excerpt}</p>
-        </article>
-        <span className="whitespace-nowrap">{post.read} min →</span>
-      </Link>
+      {external ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" onMouseEnter={play} className={className}>
+          {content}
+        </a>
+      ) : (
+        <Link href={href} onMouseEnter={play} className={className}>
+          {content}
+        </Link>
+      )}
     </li>
   );
 }

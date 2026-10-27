@@ -7,14 +7,17 @@ type HandData = { x: number; y: number; w: number; h: number; rows: string[]; v?
 type HandsFile = { gw: number; gh: number; cell: number; hands: HandData[] };
 type Pt = { x: number; y: number };
 type Grid = { W: number; H: number; cols: number; rows: number; cw: number; lh: number; fs: number };
-type Cell = { hx: number; hy: number; d: number; seed: number; hand: number; f: number; w: number };
+/** `fw`: finger weights at each bend sub-sample (BEND_N × 3), or null for cells no finger moves. */
+type Cell = { hx: number; hy: number; d: number; seed: number; hand: number; fw: Float32Array | null };
+type Bone = { k: Pt; e: Pt; r: number };
 type Target = { x: number; y: number; d: number; seed: number; sh?: boolean };
 type Part = Cell & { res: number; cd: number };
 /** One on-screen character of the final hand frame, on its way into the name. */
 type Morph = { sx: number; sy: number; d: number; seed: number; tgt: Target | null; delay: number; qx: number; qy: number };
 type Spawn = { tgt: Target; delay: number };
 type Fx = { x: number; y: number; vx: number; vy: number; life: number; age: number; g: number };
-type HomeCell = { x: number; y: number; d: number; sh?: boolean; seed: number; ox: number; oy: number; g: number };
+/** `e`: seconds after the entry starts before this cell decodes in (see ENTER). */
+type HomeCell = { x: number; y: number; d: number; sh?: boolean; seed: number; ox: number; oy: number; g: number; e: number };
 type Rig = { arm: Pt; k: Pt[]; sg: number; ph: number[] };
 type PoseT = { x: number; y: number; arm: number; ac: number; as: number; fa: number[]; g: Rig };
 
@@ -25,6 +28,8 @@ export type EngineOptions = {
   /** Fraction of viewport height the name's cap height should fill. */
   nameHeight?: number;
   skipIntro?: boolean;
+  /** When the intro is skipped, decode the name in left to right instead of showing it at once. */
+  animateEntry?: boolean;
   cursorFx?: boolean;
   handsUrl?: string;
   onLog: (lines: string[]) => void;
@@ -38,6 +43,9 @@ const SCR = "!<>-_/\\[]{}=+*^?#%@&$;:~01";
 const RAMP = ".:-=+*#%@";
 // Seconds. After the touch the wave ripples out, then (at `morph`) the hands flow straight into the name.
 const T = { s0: 0.5, s1: 2.9, touch: 4.2, morph: 4.85, dmax: 0.55, dur: 1.1 };
+// Home entry when the intro is skipped: cells start across `sweep` seconds left to right (plus a
+// little jitter) and each takes `dur` to resolve from scrambled glyphs into the name.
+const ENTER = { sweep: 0.55, jitter: 0.15, dur: 0.35 };
 const LOG = [
   "$ ./handshake --peer=visitor",
   "› locating peer ............ found",
@@ -50,7 +58,23 @@ const FING = [
   { arm: [2840, 720], f: [{ k: [1880, 690], e: [1485, 712], r: 58 }, { k: [1900, 880], e: [1880, 1190], r: 80 }, { k: [2110, 1010], e: [2100, 1175], r: 56 }] },
 ];
 
+// Cells a finger moves are sampled on a finer grid than the rest of the hand, so a bending
+// finger stretches without opening holes between characters.
+const BEND_SUB = 3, BEND_N = BEND_SUB * BEND_SUB;
+const BEND_OFF = Array.from({ length: BEND_SUB }, (_, i) => (i + 0.5) / BEND_SUB);
+
 const cl = (u: number) => (u < 0 ? 0 : u > 1 ? 1 : u);
+
+/** How much a point follows a finger bone: 1 along the finger, easing to 0 at the knuckle and edges. */
+function boneWeight(f: Bone, qx: number, qy: number) {
+  const vx = f.e.x - f.k.x, vy = f.e.y - f.k.y;
+  const t = ((qx - f.k.x) * vx + (qy - f.k.y) * vy) / (vx * vx + vy * vy);
+  if (t < -0.1 || t > 1.3) return 0;
+  const d = Math.hypot(qx - (f.k.x + vx * t), qy - (f.k.y + vy * t));
+  const fall = d < f.r ? 1 : d < f.r * 1.4 ? 1 - (d - f.r) / (f.r * 0.4) : 0;
+  const u = cl((t + 0.05) / 0.6);
+  return u * u * (3 - 2 * u) * fall;
+}
 const eb = (u: number) => { const c = 0.8, v = u - 1; return 1 + (c + 1) * v * v * v + c * v * v; };
 const eio = (u: number) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
 const rnd = () => (Math.random() * 1e9) | 0;
@@ -113,11 +137,12 @@ export class HandshakeEngine {
   private homeP: HomeCell[] = [];
   private nextRip = 0;
   private glitchLast = 0;
+  private enterAt = 0; // performance.now() when the home entry began; 0 once it's done
   private mouse = { x: -1e4, y: -1e4 };
 
   private stampN = 0;
   private bS = new Int32Array(0); private bD = new Float32Array(0); private bK = new Int32Array(0);
-  private bF = new Uint8Array(0); private bL = new Int32Array(0);
+  private bF = new Uint8Array(0); private bL = new Int32Array(0); private bB = new Uint8Array(0);
 
   constructor(canvas: HTMLCanvasElement, options: EngineOptions) {
     this.cv = canvas;
@@ -145,7 +170,7 @@ export class HandshakeEngine {
     });
     this.D = data;
     this.layout();
-    if (this.o.skipIntro) this.toHome(); else this.startIntro();
+    if (this.o.skipIntro) this.toHome(this.o.animateEntry ?? false); else this.startIntro();
     this.last = performance.now();
     this.raf = requestAnimationFrame(this.loop);
   }
@@ -245,7 +270,7 @@ export class HandshakeEngine {
         let sum = 0, n = 0;
         for (let iy = iy0; iy <= iy1; iy++) for (let ix = ix0; ix <= ix1; ix++) { sum += hv[iy * h.w + ix]; n++; }
         const v = sum / n;
-        if (v > 0.1) out.push({ hx: c * cw, hy: r * lh, d: Math.min(1, Math.pow(v, 0.8) * 1.1), seed: rnd(), hand: hi, f: -1, w: 0 });
+        if (v > 0.1) out.push({ hx: c * cw, hy: r * lh, d: Math.min(1, Math.pow(v, 0.8) * 1.1), seed: rnd(), hand: hi, fw: null });
       }
       return out;
     });
@@ -262,22 +287,21 @@ export class HandshakeEngine {
     const F = 3840 / 2576;
     const toS = (pt: number[]): Pt => ({ x: ox + pt[0] * F * s, y: oy + pt[1] * F * s });
     this.rig = FING.map((h, hi) => {
-      const fz = h.f.map((f) => ({ k: toS(f.k), e: toS(f.e), r: f.r * F * s }));
-      // Weight each cell to the finger bone it sits on so fingers can curl independently.
+      const fz: Bone[] = h.f.map((f) => ({ k: toS(f.k), e: toS(f.e), r: f.r * F * s }));
+      // Weight every bend sub-sample to all three finger bones so fingers curl independently.
+      // Weights are per point (not per cell) and blended where fingers meet, so the bend changes
+      // smoothly across the hand; a per-cell, strongest-finger weight tore gaps into the fingers.
       this.handT[hi].forEach((p) => {
-        const qx = p.hx + cw / 2, qy = p.hy + lh / 2;
-        let best = 0, bi = -1;
-        fz.forEach((f, fi) => {
-          const vx = f.e.x - f.k.x, vy = f.e.y - f.k.y;
-          const t = ((qx - f.k.x) * vx + (qy - f.k.y) * vy) / (vx * vx + vy * vy);
-          if (t < -0.1 || t > 1.3) return;
-          const d = Math.hypot(qx - (f.k.x + vx * t), qy - (f.k.y + vy * t));
-          const fall = d < f.r ? 1 : d < f.r * 1.4 ? 1 - (d - f.r) / (f.r * 0.4) : 0;
-          const u = cl((t + 0.05) / 0.6), w = u * u * (3 - 2 * u) * fall;
-          if (w > best) { best = w; bi = fi; }
-        });
-        p.f = bi;
-        p.w = best;
+        const fw = new Float32Array(BEND_N * 3);
+        let any = false;
+        for (let q = 0; q < BEND_N; q++) {
+          const qx = p.hx + BEND_OFF[q % BEND_SUB] * cw, qy = p.hy + BEND_OFF[(q / BEND_SUB) | 0] * lh;
+          let sum = 0;
+          for (let j = 0; j < 3; j++) { const w = boneWeight(fz[j], qx, qy); fw[q * 3 + j] = w; sum += w; }
+          if (sum > 1) for (let j = 0; j < 3; j++) fw[q * 3 + j] /= sum;
+          if (sum > 0) any = true;
+        }
+        p.fw = any ? fw : null;
       });
       return { arm: toS(h.arm), k: fz.map((f) => f.k), sg: hi === 0 ? 1 : -1, ph: [0, 1.7, 3.4] };
     });
@@ -431,9 +455,14 @@ export class HandshakeEngine {
     this.morphEnd = T.dmax + 0.08 + T.dur + 0.15;
   }
 
-  private toHome() {
+  private toHome(enter = false) {
     this.phase = "home";
-    this.homeP = this.targets.map((t) => ({ x: t.x, y: t.y, d: t.d, sh: t.sh, seed: t.seed, ox: 0, oy: 0, g: 0 }));
+    const W = this.G.W || 1;
+    this.homeP = this.targets.map((t) => ({
+      x: t.x, y: t.y, d: t.d, sh: t.sh, seed: t.seed, ox: 0, oy: 0, g: 0,
+      e: (t.x / W) * ENTER.sweep + Math.random() * ENTER.jitter,
+    }));
+    this.enterAt = enter ? performance.now() : 0;
     this.parts = [];
     this.morph = null;
     this.spawns = [];
@@ -514,35 +543,72 @@ export class HandshakeEngine {
     });
   }
 
+  /**
+   * Fill single empty cells sandwiched between two drawn cells (left/right or above/below) when a
+   * bending finger drew one of them: whatever stretching the finer sampling misses. Gaps next to
+   * fingers that aren't moving are left alone, so the hand's own outline is kept.
+   */
+  private closeGaps(nl: number, stamp: number) {
+    const { cols, rows } = this.G, { bS, bD, bK, bF, bB, bL: list } = this;
+    const end = nl;
+    const fill = (i: number, a: number, b: number) => {
+      if (bS[i] === stamp || bS[a] !== stamp || bS[b] !== stamp || !(bB[a] | bB[b])) return;
+      const src = bD[a] >= bD[b] ? a : b;
+      bS[i] = stamp; bD[i] = (bD[a] + bD[b]) / 2; bK[i] = bK[src]; bF[i] = bF[src]; bB[i] = 0;
+      list[nl++] = i;
+    };
+    for (let n = 0; n < end; n++) {
+      const i = list[n];
+      if (!bB[i]) continue;
+      const c = i % cols, r = (i / cols) | 0;
+      if (c + 2 < cols) fill(i + 1, i, i + 2);
+      if (c >= 2) fill(i - 1, i, i - 2);
+      if (r + 2 < rows) fill(i + cols, i, i + 2 * cols);
+      if (r >= 2) fill(i - cols, i, i - 2 * cols);
+    }
+    return nl;
+  }
+
   private drawIntro(t: number) {
     const { cw, lh, cols, rows } = this.G;
     if (t < T.morph) {
       const PO = this.pose(t), wave = t > T.touch ? (t - T.touch) * 850 : -1e4, N = cols * rows;
       if (this.bS.length !== N) {
         this.bS = new Int32Array(N); this.bD = new Float32Array(N); this.bK = new Int32Array(N);
-        this.bF = new Uint8Array(N); this.bL = new Int32Array(N); this.stampN = 0;
+        this.bF = new Uint8Array(N); this.bL = new Int32Array(N); this.bB = new Uint8Array(N); this.stampN = 0;
       }
-      const stamp = ++this.stampN, { bS, bD, bK, bF, bL: list } = this;
+      const stamp = ++this.stampN, { bS, bD, bK, bF, bB, bL: list } = this;
       const ox4 = [0.25, 0.75, 0.25, 0.75], oy4 = [0.25, 0.25, 0.75, 0.75];
       let nl = 0;
-      // Splat 4 sub-samples per cell through finger + arm rotations, keep the densest per grid cell.
+      // Splat sub-samples of each cell through finger + arm rotations, keep the densest per grid cell.
       for (const p of this.parts) {
-        const o = PO[p.hand], g = o.g;
-        let fc = 1, fsn = 0, K: Pt | null = null;
-        if (p.f >= 0) { const ang = o.fa[p.f] * p.w; if (ang) { fc = Math.cos(ang); fsn = Math.sin(ang); K = g.k[p.f]; } }
+        const o = PO[p.hand], g = o.g, fw = p.fw;
         const flag = (t < p.res ? 1 : 0) | (wave > 0 && Math.abs(p.cd - wave) < 36 ? 2 : 0);
-        for (let q = 0; q < 4; q++) {
-          let x = p.hx + ox4[q] * cw, y = p.hy + oy4[q] * lh;
-          if (K) { const dx = x - K.x, dy = y - K.y; x = K.x + dx * fc - dy * fsn; y = K.y + dx * fsn + dy * fc; }
+        const bent = fw ? 1 : 0;
+        for (let q = 0, n = fw ? BEND_N : 4; q < n; q++) {
+          let x: number, y: number;
+          if (fw) {
+            x = p.hx + BEND_OFF[q % BEND_SUB] * cw; y = p.hy + BEND_OFF[(q / BEND_SUB) | 0] * lh;
+            // Each finger turns the point about its knuckle by its share of the bend; offsets add.
+            let mx = 0, my = 0;
+            for (let j = 0; j < 3; j++) {
+              const ang = o.fa[j] * fw[q * 3 + j];
+              if (!ang) continue;
+              const K = g.k[j], rx = x - K.x, ry = y - K.y, c = Math.cos(ang), sn = Math.sin(ang);
+              mx += rx * c - ry * sn - rx; my += rx * sn + ry * c - ry;
+            }
+            x += mx; y += my;
+          } else { x = p.hx + ox4[q] * cw; y = p.hy + oy4[q] * lh; }
           if (o.arm) { const A = g.arm, dx = x - A.x, dy = y - A.y; x = A.x + dx * o.ac - dy * o.as; y = A.y + dx * o.as + dy * o.ac; }
           x += o.x; y += o.y;
           const c = Math.floor(x / cw), r = Math.floor(y / lh);
           if (c < 0 || c >= cols || r < 0 || r >= rows) continue;
           const i = r * cols + c;
-          if (bS[i] !== stamp) { bS[i] = stamp; list[nl++] = i; bD[i] = p.d; bK[i] = p.seed; bF[i] = flag; }
-          else if (p.d > bD[i]) { bD[i] = p.d; bK[i] = p.seed; bF[i] = flag; }
+          if (bS[i] !== stamp) { bS[i] = stamp; list[nl++] = i; bD[i] = p.d; bK[i] = p.seed; bF[i] = flag; bB[i] = bent; }
+          else { if (p.d > bD[i]) { bD[i] = p.d; bK[i] = p.seed; bF[i] = flag; } bB[i] |= bent; }
         }
       }
+      nl = this.closeGaps(nl, stamp);
       for (let n = 0; n < nl; n++) {
         const i = list[n], f = bF[i];
         // Flag 1 (still resolving in): scrambled glyph. Flag 2 (touch shockwave): keep the hand's own
@@ -581,6 +647,8 @@ export class HandshakeEngine {
 
   private drawHome(now: number) {
     const { cw, lh } = this.G, m = this.mouse, R = 120, fxOn = this.o.cursorFx ?? true, P = this.homeP;
+    const ent = this.enterAt ? (now - this.enterAt) / 1000 : Infinity;
+    if (ent > ENTER.sweep + ENTER.jitter + ENTER.dur) this.enterAt = 0;
     this.ripples = this.ripples.filter((rp) => now - rp.t < 1600);
     if (now > this.nextRip && P.length) {
       const q = P[(Math.random() * P.length) | 0];
@@ -614,6 +682,12 @@ export class HandshakeEngine {
       p.ox += (tx - p.ox) * 0.16;
       p.oy += (ty - p.oy) * 0.16;
       if (p.g > now && hot < 0.5) hot = 0.5;
+      if (ent < p.e + ENTER.dur) {
+        // Still decoding in: hidden until its turn, then a scrambled glyph that firms up.
+        const u = (ent - p.e) / ENTER.dur;
+        if (u >= 0) this.put(this.scr(p.seed), p.x, p.y, 0.35 + 0.6 * u);
+        continue;
+      }
       const sc = hot > 0.25;
       this.put(sc ? this.scr(p.seed) : this.base(p.d, p.seed), p.x + p.ox, p.y + p.oy, sc ? 1 : Math.min(1, this.ta(p) + hot));
     }

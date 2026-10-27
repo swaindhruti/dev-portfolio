@@ -5,17 +5,19 @@ import { JsonLd } from "@/components/json-ld";
 import { PageEnter } from "@/components/page-enter";
 import { roles, stack } from "@/data/career";
 import { absoluteUrl, site } from "@/data/site";
+import { formatMonth } from "@/lib/format";
+import { ogImage } from "@/lib/og";
 
 const current = roles[0];
 const description = `${site.name}'s career: ${roles
-  .map((r) => `${r.title} at ${r.company} (${r.from}–${r.to})`)
+  .map((r) => `${r.title} at ${r.company} (${formatMonth(r.from)} – ${formatMonth(r.to)})`)
   .join(", ")}. Stack: ${Object.values(stack).flat().slice(0, 12).join(", ")}.`;
 
 export const metadata: Metadata = {
-  title: "Career",
+  title: "career",
   description,
   alternates: { canonical: "/career" },
-  openGraph: { url: "/career", title: `Career · ${site.name}`, description },
+  openGraph: { url: "/career", title: `Career · ${site.name}`, description, images: [ogImage] },
 };
 
 export default function CareerPage() {
@@ -23,7 +25,7 @@ export default function CareerPage() {
   return (
     <PageEnter>
       <h1 className="sr-only">Career</h1>
-      <CommandBar aside={oldest ? `${roles.length} roles · ${oldest.from} → now` : null}>
+      <CommandBar aside={oldest ? `${roles.length} roles · ${formatMonth(oldest.from)} → now` : null}>
         $ git log --career --graph
       </CommandBar>
       <CareerLog roles={roles} stack={stack} />
