@@ -1,0 +1,101 @@
+{
+  "projects": [
+    {
+      "id": "work-neuraos",
+      "name": "neuraos",
+      "year": "2026",
+      "kind": "work",
+      "summary": "Agentic RAG chat for clinical teams.",
+      "desc": "A multi-user agentic RAG chat system for medical teams, built on the Google Cloud stack: Firebase, Firestore and Gemini on Vertex AI, with a Next.js web app. A Go backend and a React Native mobile app are on the way.",
+      "stack": ["next.js", "firebase", "firestore", "vertex ai", "gemini", "go", "react native"],
+      "links": [
+        { "label": "live", "href": "https://neuraos-client-web.vercel.app" },
+        { "label": "web", "href": "https://github.com/swaindhruti/neuraos-client-web" },
+        { "label": "mobile", "href": "https://github.com/swaindhruti/neuraos-client-mobile" },
+        { "label": "server", "href": "https://github.com/swaindhruti/neuraos-server" }
+      ]
+    },
+    {
+      "id": "work-visus",
+      "name": "visus",
+      "year": "2026",
+      "kind": "hackathon",
+      "summary": "AI eye check-ups on any device.",
+      "desc": "Builds a custom test plan from your condition, calibrates your face and viewing distance, and recommends lenses. A monolith with a Next.js web app, a Hono API, a React Native app, Postgres and Gemini.",
+      "stack": ["next.js", "hono", "react native", "postgres", "gemini"],
+      "links": [{ "label": "source", "href": "https://github.com/swaindhruti/visus-eye-screening-app" }]
+    },
+    {
+      "id": "work-devflow",
+      "name": "devflow",
+      "year": "2026",
+      "kind": "personal",
+      "summary": "A terminal-first workspace orchestrator.",
+      "desc": "Register projects, run saved commands with live streamed output, and check Docker and Git, all in one Bubble Tea app. Local-first: no database, no background service, no network calls. Just a JSON registry on disk, and the git and docker CLIs when a project needs them.",
+      "stack": ["go", "bubble tea", "docker", "git"],
+      "links": [{ "label": "source", "href": "https://github.com/swaindhruti/devflow-workspace-orchestrator" }]
+    },
+    {
+      "id": "work-pharmastock",
+      "name": "pharmastock",
+      "year": "2026",
+      "kind": "personal",
+      "summary": "The backend for B2B medicine discovery.",
+      "desc": "Stockists upload inventory PDFs; async workers parse and normalise them into a catalogue retailers can fuzzy-search. REST APIs in Go and Echo on PostgreSQL, with a modular, Dockerised setup.",
+      "stack": ["go", "echo", "postgres", "docker"],
+      "links": [
+        { "label": "source", "href": "https://github.com/swaindhruti/pharmastock-backend" },
+        { "label": "case study", "href": "https://swaindhruti.github.io/project-case-studies/projects/pharmastock.html" }
+      ]
+    },
+    {
+      "id": "work-plastrack",
+      "name": "plastrack",
+      "year": "2025",
+      "kind": "hackathon",
+      "summary": "AI waste identification and hotspot mapping.",
+      "desc": "Identifies waste with computer vision, suggests how to dispose of it, maps hotspots for municipalities and connects people with recyclers, with gamification to keep communities involved. Express on Bun with Postgres and Prisma, a Nuxt web app and a Flutter mobile app, on Google Cloud Run.",
+      "stack": ["bun", "express", "postgres", "prisma", "nuxt", "flutter", "gemini", "cloud run"],
+      "links": [
+        { "label": "live", "href": "https://waste-2-way.vercel.app" },
+        { "label": "source", "href": "https://gitlab.com/dhrut.24.swain/waste-2-way" }
+      ]
+    },
+    {
+      "id": "work-nutriscan",
+      "name": "nutriscan",
+      "year": "2025",
+      "kind": "hackathon",
+      "summary": "Scan a barcode, get nutrition advice made for you.",
+      "desc": "Scans product barcodes, pulls nutrition data from OpenFoodFacts and grades it A–E against your health profile, with Gemini recommendations and Hindi text-to-speech. Go and Gin on MongoDB, with a Next.js frontend. A three-person team build at Hack4Bengal Season 4.",
+      "stack": ["go", "gin", "mongodb", "next.js", "gemini", "docker"],
+      "links": [
+        { "label": "source", "href": "https://github.com/ayussh-2/project-amobagan" },
+        { "label": "demo", "href": "https://youtu.be/WaJyNxkrd2o" }
+      ]
+    },
+    {
+      "id": "work-innovision",
+      "name": "innovision",
+      "year": "2024",
+      "kind": "club",
+      "summary": "The site for Innovision, NIT Rourkela's annual tech fest.",
+      "desc": "Event info and registrations for the fest, built with GDSC NIT Rourkela. A React and Tailwind frontend on a GraphQL backend, deployed to a DigitalOcean droplet.",
+      "stack": ["react", "tailwind", "graphql", "digitalocean"],
+      "links": [{ "label": "source", "href": "https://github.com/dscnitrourkela/project-raisin" }]
+    },
+    {
+      "id": "work-aiche-src",
+      "name": "aiche src",
+      "year": "2024",
+      "kind": "club",
+      "summary": "The site for AIChE NIT Rourkela's Student Regional Conference.",
+      "desc": "Events, projects and community initiatives for the annual conference, built with GDSC NIT Rourkela. React and Tailwind on Vite, with a GraphQL backend.",
+      "stack": ["react", "vite", "tailwind", "graphql"],
+      "links": [
+        { "label": "live", "href": "https://aiche.netlify.app" },
+        { "label": "source", "href": "https://github.com/dscnitrourkela/project-vanilla" }
+      ]
+    }
+  ]
+}

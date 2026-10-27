@@ -1,0 +1,22 @@
+{
+  "posts": [
+    {
+      "slug": "commit-or-rollback",
+      "date": "2026-08-13",
+      "read": 6,
+      "title": "Commit or Rollback — The All-or-Nothing Contract That Keeps Your Data Honest",
+      "tags": ["db", "backend"],
+      "excerpt": "You send ₹10,000. The server crashes after the debit, before the credit. What keeps your data honest?",
+      "url": "https://x.com/D_SwainX/status/2087841732171829466"
+    },
+    {
+      "slug": "what-happens-when-you-hit-enter",
+      "date": "2026-10-18",
+      "read": 6,
+      "title": "What Actually Happens When You Hit Enter?",
+      "tags": ["backend"],
+      "excerpt": "You press Enter. In under a second, your browser finds a server, shakes hands with it and paints a page.",
+      "url": "https://x.com/D_SwainX/status/2111858265286217947"
+    }
+  ]
+}

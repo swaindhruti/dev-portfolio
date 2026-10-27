@@ -1,0 +1,94 @@
+{
+  "memories": [
+    {
+      "id": "mem-first-drink",
+      "date": "2026-01-15",
+      "type": "milestone",
+      "title": "First drink, first SDE job",
+      "place": "Rourkela",
+      "note": "Landed my first SDE role at a startup. Worked like crazy, but proud of every bit of it. Cheers to the start, and the pain.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/daru.jpg"
+    },
+    {
+      "id": "mem-opencode-handover",
+      "date": "2026-05-30",
+      "type": "milestone",
+      "title": "Handing opencode to our juniors",
+      "place": "Rourkela",
+      "note": "After a year of leading it, we passed the club on. Easily the most talented team we've had in years.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/opencode_jrs.jpg"
+    },
+    {
+      "id": "mem-hn7",
+      "date": "2026-01-03",
+      "type": "hackathon",
+      "title": "Led a national-level hackathon",
+      "place": "Rourkela",
+      "note": "From taking part to running one, with my fellow bakchods. Months of prep and stress for three days. Could have been better, but it taught me a lot about this community. Respect to every hackathon organiser.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/hn7.png"
+    },
+    {
+      "id": "mem-lego-f1",
+      "date": "2026-08-15",
+      "type": "milestone",
+      "title": "My first LEGO F1 builds",
+      "place": "my desk",
+      "note": "A LEGO fan since I was a kid, but it was always too expensive. Built the McLaren and Ferrari with what was left after the MacBook. Slow to build, pure joy.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/lego.jpg"
+    },
+    {
+      "id": "mem-macbook",
+      "date": "2026-07-28",
+      "type": "milestone",
+      "title": "Bought my dream MacBook",
+      "place": "my desk",
+      "note": "Paid for with freelance and internship money: all-nighters, missed classes and all. My first proper work setup, and a proud one.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/mac.png"
+    },
+    {
+      "id": "mem-h4b",
+      "date": "2025-07-01",
+      "type": "hackathon",
+      "title": "H4B 2025, our first offline hackathon",
+      "place": "West Bengal",
+      "note": "Summer vacation with the club's bakchod gang. The train ran 12 hours late thanks to the weather. Worth every hour.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/h4b.jpg"
+    },
+    {
+      "id": "mem-web3-session",
+      "date": "2025-02-15",
+      "type": "talk",
+      "title": "My first public session, on web3",
+      "place": "YouTube live",
+      "note": "Streamed live for opencode: a whole series from web3 basics to how it all actually works. Good old ETH days.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/web3_session.jpg"
+    },
+    {
+      "id": "mem-hack-inno",
+      "date": "2024-10-01",
+      "type": "hackathon",
+      "title": "Ran hack-inno, our first hackathon",
+      "place": "Rourkela",
+      "note": "Second year, leading the team behind our first intra-college hackathon. Registration desks by day, all-night majdoori by night. It worked.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/hackinno.jpg"
+    },
+    {
+      "id": "mem-sih",
+      "date": "2023-09-15",
+      "type": "hackathon",
+      "title": "First SIH, three ideas, one all-nighter",
+      "place": "Rourkela",
+      "note": "Changed our idea three times overnight in the BM/BT complex. Didn't get selected. Still one hell of a night.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/sih.jpg"
+    },
+    {
+      "id": "mem-opencode",
+      "date": "2023-09-01",
+      "type": "milestone",
+      "title": "Joined opencode, my first tech club",
+      "place": "Rourkela",
+      "note": "First year, first tech club, first bakchod friends. What a time. Where the whole tech journey started.",
+      "image": "https://ik.imagekit.io/devdsfolio/dev-folio-memories/opencode.png"
+    }
+  ]
+}
