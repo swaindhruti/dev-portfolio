@@ -358,6 +358,24 @@ export class HandshakeEngine {
       for (let yy = y0; yy < y1; yy += 2) for (let xx = x0; xx < x1; xx += 2) { sm += img[(yy * iw + xx) * 4 + 3]; n++; }
       cov[r * cols + col] = n ? sm / n / 255 : 0;
     }
+    // The face's stems bow by a pixel or so (U's are slightly curved), so an edge sitting near the
+    // threshold steps in and out down the stem. Give each vertical run of similar edge cells one
+    // shared coverage so stems stay straight; curves vary more and keep their own values.
+    for (let col = 0; col < cols; col++) {
+      let r = 0;
+      while (r < rows) {
+        const v = cov[r * cols + col];
+        if (v < 0.15 || v > 0.85) { r++; continue; }
+        let e = r, lo = v, hi = v, sm = 0;
+        while (e < rows) {
+          const w = cov[e * cols + col];
+          if (w < 0.15 || w > 0.85 || Math.max(hi, w) - Math.min(lo, w) > 0.3) break;
+          lo = Math.min(lo, w); hi = Math.max(hi, w); sm += w; e++;
+        }
+        if (e - r >= 3) for (let k = r; k < e; k++) cov[k * cols + col] = sm / (e - r);
+        r = e;
+      }
+    }
     // Distance from the edge (1..4) so the outline can be brighter than the fill.
     const dist = new Uint8Array(N);
     for (let i = 0; i < N; i++) dist[i] = cov[i] > 0.45 ? 255 : 0;
