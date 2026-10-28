@@ -5,9 +5,9 @@ import { ThemeToggle } from "./theme-toggle";
 export function SiteFooter({ className = "" }: { className?: string }) {
   return (
     <footer
-      className={`flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-5 text-dim sm:px-8 sm:py-[22px] ${className}`}
+      className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3.5 text-dim sm:gap-x-6 sm:gap-y-3 sm:px-8 sm:py-[22px] ${className}`}
     >
-      <ul aria-label="Elsewhere" className="m-0 flex list-none gap-[22px] p-0">
+      <ul aria-label="Elsewhere" className="m-0 flex list-none gap-4 p-0 sm:gap-[22px]">
         {site.socials.map((s) => (
           <li key={s.label}>
             <ScrambleLink

@@ -18,7 +18,7 @@ function ActiveNav({ variant }: { variant: Variant }) {
 function NavList({ variant, pathname }: { variant: Variant; pathname: string | null }) {
   return (
     <nav aria-label="Primary">
-      <ul className="m-0 flex list-none flex-wrap gap-x-7 gap-y-3 p-0">
+      <ul className="m-0 flex list-none flex-wrap gap-x-5 gap-y-0 p-0 sm:gap-x-7 sm:gap-y-3">
         {nav.map((item) => {
           const active = !!pathname && (pathname === item.href || pathname.startsWith(`${item.href}/`));
           const tone = variant === "home" ? "" : active ? "text-hi" : "text-dim hover:text-hi";

@@ -13,7 +13,7 @@ export function CareerLog({ roles, stack }: { roles: Role[]; stack: Record<strin
       >
         <ol
           aria-label="Roles, newest first"
-          className="m-0 box-border flex min-w-0 flex-[1_1_0] list-none flex-col p-0 pt-11 pb-12 min-[820px]:overflow-y-auto min-[820px]:pb-24"
+          className="m-0 box-border flex min-w-0 flex-[1_1_0] list-none flex-col p-0 pt-6 pb-12 min-[820px]:pt-11 min-[820px]:overflow-y-auto min-[820px]:pb-24"
         >
           {roles.map((r, i) => {
             const head = i === 0 && /present|now/i.test(r.to);

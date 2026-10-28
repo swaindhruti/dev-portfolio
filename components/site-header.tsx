@@ -8,7 +8,7 @@ export function SiteHeader({ variant = "site", className = "" }: { variant?: "si
   // transitions instead of being swapped for a (slightly dimmer) bitmap snapshot.
   return (
     <header
-      className={`z-10 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-5 sm:px-8 sm:py-[26px] ${className}`}
+      className={`z-10 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 py-4 sm:gap-y-3 sm:px-8 sm:py-[26px] ${className}`}
     >
       <ScrambleLink
         href="/#home"

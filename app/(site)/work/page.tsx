@@ -21,7 +21,7 @@ export default function WorkPage() {
     <PageEnter>
       <CommandBar aside={`${projects.length} ${projects.length === 1 ? "project" : "projects"}`}>$ ls ./work</CommandBar>
       {/* Wide screens: the page stays put and only the project list scrolls (see WorkBrowser). */}
-      <div className="flex min-h-0 flex-auto flex-col overflow-x-hidden overflow-y-auto min-[960px]:overflow-hidden">
+      <div data-scroller className="flex min-h-0 flex-auto flex-col overflow-x-hidden overflow-y-auto min-[960px]:overflow-hidden">
         <main id="main" className="mx-auto box-border flex w-full max-w-[1180px] flex-col px-4 sm:px-8 min-[960px]:h-full min-[960px]:pb-12">
           <h1 className="sr-only">Work</h1>
           <WorkBrowser projects={projects} />

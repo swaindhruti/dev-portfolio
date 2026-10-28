@@ -77,7 +77,11 @@ export function MemoryCarousel({ memories }: { memories: Memory[] }) {
       const W = st.clientWidth;
       const H = st.clientHeight;
       const isNarrow = W < 820;
-      const bw = Math.round(Math.max(130, Math.min(220, W * 0.17)));
+      // Phones get smaller cards so the ring still reads as a ring in ~340px.
+      const phone = W < 560;
+      const bw = Math.round(phone ? Math.max(88, W * 0.28) : Math.max(130, Math.min(220, W * 0.17)));
+      // Phones are tall and narrow: tip the ring further towards the viewer so the cards spread out.
+      const round = phone ? 0.9 : ROUNDNESS;
 
       // Centre the orbit on the viewport, not the stage (the stage sits below the header and
       // command line, so its own centre is lower than the screen's).
@@ -93,9 +97,9 @@ export function MemoryCarousel({ memories }: { memories: Memory[] }) {
       // As round as the height allows: back cards (scale .58) above, front cards (scale 1) below.
       let rx = Math.min(W / 2 - bw * 0.45 - Math.abs(ox), 540);
       const ryRoom = Math.max(40, Math.min(cy - EDGE - (cardH * 0.58) / 2, H - EDGE - cardH / 2 - cy));
-      const ry = Math.min(rx * ROUNDNESS, ryRoom);
+      const ry = Math.min(rx * round, ryRoom);
       // Height-limited: pull the sides in rather than flattening the ring.
-      rx = Math.max(Math.min(rx, bw * 1.4), Math.min(rx, ry / ROUNDNESS));
+      rx = Math.max(Math.min(rx, bw * 1.4), Math.min(rx, ry / round));
       const [selS, selX, selY] = isNarrow
         ? [Math.min(W * 0.92, (H * 0.5) / 0.75) / bw, 0, -H * 0.2]
         : [Math.min(W * 0.44, 560, (H * 0.78) / 0.75) / bw, -W * 0.21, 0];
@@ -277,7 +281,10 @@ export function MemoryCarousel({ memories }: { memories: Memory[] }) {
         className="fade-in pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 text-center leading-5 text-dim transition-opacity duration-[400ms]"
       >
         <span className="text-[13px] text-hi">~/memories</span>
-        <span>drag to spin · click to open</span>
+        <span className="whitespace-nowrap">
+          drag to spin · <span className="pointer-coarse:hidden">click</span>
+          <span className="hidden pointer-coarse:inline">tap</span> to open
+        </span>
       </div>
 
       {cur && <div onClick={close} aria-hidden="true" className="absolute inset-0 z-[900] cursor-default" />}

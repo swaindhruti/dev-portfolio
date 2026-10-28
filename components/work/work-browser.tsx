@@ -38,9 +38,23 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
     if (curId) document.getElementById(`work-${curId}`)?.scrollIntoView({ block: "nearest" });
   }, [curId]);
 
+  // Stacked layout (phones): the detail sits below the list, so bring it into view on tap.
+  const pick = (i: number) => {
+    setSel(i);
+    if (!window.matchMedia("(max-width: 959px)").matches) return;
+    requestAnimationFrame(() => {
+      const el = document.getElementById("work-detail");
+      // Scroll only the page's own scroller: scrollIntoView would also shift the fixed screen.
+      const sc = el?.closest<HTMLElement>("[data-scroller]");
+      if (!el || !sc) return;
+      const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 24;
+      sc.scrollTo({ top, behavior: "smooth" });
+    });
+  };
+
   return (
     <div className="flex flex-col gap-14 min-[960px]:min-h-0 min-[960px]:flex-auto min-[960px]:flex-row min-[960px]:gap-[72px]">
-      <div className="flex min-w-0 flex-col pt-11 min-[960px]:flex-[1_1_0] min-[960px]:overflow-y-auto min-[960px]:pb-24">
+      <div className="flex min-w-0 flex-col pt-6 min-[960px]:pt-11 min-[960px]:flex-[1_1_0] min-[960px]:overflow-y-auto min-[960px]:pb-24">
         <ul className="m-0 list-none p-0">
           {projects.map((p, i) => {
             const active = i === sel;
@@ -48,7 +62,7 @@ export function WorkBrowser({ projects }: { projects: Project[] }) {
               <li key={p.id} id={`work-${p.id}`} className="rise" style={slot(i + 2)}>
                 <button
                   type="button"
-                  onClick={() => setSel(i)}
+                  onClick={() => pick(i)}
                   aria-pressed={active}
                   aria-controls="work-detail"
                   className="grid w-full cursor-pointer grid-cols-[4ch_3ch_minmax(0,1fr)_auto] items-baseline gap-x-3.5 py-2 text-left transition-colors duration-150 max-[480px]:grid-cols-[3ch_minmax(0,1fr)_auto]"
