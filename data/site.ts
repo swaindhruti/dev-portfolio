@@ -6,7 +6,7 @@ export const site = {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://dhrutinandan.space"
   ).replace(/\/$/, ""),
   /** Shown on the home screen. */
-  role: "backend & ai engineer",
+  role: "Backend & AI engineer",
   /** Used in page titles, link previews and structured data. */
   jobTitle: "Backend, AI & Full-Stack Engineer",
   tagline: "I put feelings into words, Claude turns them into code.",
@@ -20,16 +20,16 @@ export const site = {
   twitterHandle: "@D_SwainX",
   email: "dhrutinandan.dev@gmail.com",
   socials: [
-    { label: "twitter", href: "https://x.com/D_SwainX" },
+    { label: "x", href: "https://x.com/D_SwainX" },
     { label: "github", href: "https://github.com/swaindhruti" },
     { label: "email", href: "mailto:dhrutinandan.dev@gmail.com" },
   ],
 } as const;
 
 export const nav = [
-  { idx: "01", label: "career", href: "/career" },
-  { idx: "02", label: "work", href: "/work" },
-  { idx: "03", label: "about", href: "/about" },
+  { idx: "01", label: "about", href: "/about" },
+  { idx: "02", label: "career", href: "/career" },
+  { idx: "03", label: "work", href: "/work" },
   { idx: "04", label: "blogs", href: "/blogs" },
   { idx: "05", label: "memories", href: "/memories" },
 ] as const;
