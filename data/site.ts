@@ -20,7 +20,7 @@ export const site = {
   twitterHandle: "@D_SwainX",
   email: "dhrutinandan.dev@gmail.com",
   socials: [
-    { label: "x", href: "https://x.com/D_SwainX" },
+    { label: "twitter", href: "https://x.com/D_SwainX" },
     { label: "github", href: "https://github.com/swaindhruti" },
     { label: "email", href: "mailto:dhrutinandan.dev@gmail.com" },
   ],
